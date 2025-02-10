@@ -1,0 +1,25 @@
+========================= Bank =========================
+
+
+1. Create a Class for user (ApplicationsUser)
+
+2.Create a Class for Account (new Class
+    - One-to-Many, can have several of Transactions.
+    - belongs to one User)
+
+3. Create a Class for Transactions (new Class
+    - belongs to one Account)
+
+4. Create DBset in DbContext
+
+5. Migrate and update DB
+
+6. Create a profile page for user 
+    There is a boilerplate to use, modify it
+    - Use Bootstrap
+
+7a. Create an Admin page
+    Authorization lock for admins
+    - Display lists for users.
+
+7b. Create a function to delete/add roles for users.

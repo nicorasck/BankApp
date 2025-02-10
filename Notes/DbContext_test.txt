@@ -1,0 +1,45 @@
+
+
+======== My on builder-test (not necessarily for SQLite) ========  
+      
+      // Call the base OnModelCreating method.
+        base.OnModelCreating(builder);
+
+        // Configure the Account => BankTransaction relationship
+        builder.Entity<Account>()
+            .HasMany(a => a.OutgoingTransactions) // One-to-Many, an Account has many outgoing transactions.
+            .WithOne(t => t.FromAccount) // One-to-one, each transaction has one "FromAccount".
+            .HasForeignKey(t => t.FromAccountId) // Foreign Key => in BankTransaction
+            .OnDelete(DeleteBehavior.Restrict); // Prevent cascade delete
+
+        // Configure the relationship between BankTransaction and Account => from Incoming Transaction
+        builder.Entity<Account>()
+            .HasMany(a => a.IncomingTransactions) // One-to-Many,  an Account has many incoming transactions.
+            .WithOne(t => t.ToAccount) // One-to-One, Each transaction has one "ToAccount".
+            .HasForeignKey(t => t.ToAccountId) // Foreign Key => in BankTransaction.
+            .OnDelete(DeleteBehavior.Restrict); // Prevent cascade delete
+
+        // Configure the BankTransaction => Account relationship
+        builder.Entity<BankTransaction>()
+            .HasOne(t => t.FromAccount) // One-to-One, each transaction has one "FromAccount".
+            .WithMany(a => a.OutgoingTransactions) // One-to-Many, an Account has many outgoing transactions.
+            .HasForeignKey(t => t.FromAccountId) // Foreign Key => in BankTransaction.
+            .OnDelete(DeleteBehavior.Restrict); // Prevent cascade delete
+
+        // Configure the relationship between BankTransaction and Account => "ToAccount".
+        builder.Entity<BankTransaction>()
+            .HasOne(t => t.ToAccount) // One-to-One, each transaction has one "ToAccount".
+            .WithMany(a => a.IncomingTransactions) // One-to-Many, an Account has many incoming transactions.
+            .HasForeignKey(t => t.ToAccountId) // Foreign Key => in BankTransaction.
+            .OnDelete(DeleteBehavior.Restrict); // Prevent cascade delete
+
+
+    // Enable foreign key support in SQLite - took this piece from ChatGpt!
+    public override int SaveChanges()
+    {   // Check if the database provider is SQLite.
+        if (Database.ProviderName == "Microsoft.EntityFrameworkCore.Sqlite")
+        {   // Enable foreign key support in SQLite.
+            Database.ExecuteSqlRaw("PRAGMA foreign_keys = ON;");
+        }
+        return base.SaveChanges(); // Call the base SaveChanges method to save changes to the database
+    }
