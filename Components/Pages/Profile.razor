@@ -1,8 +1,8 @@
-@page "/Profile"
-@inject AuthenticationStateProvider AuthenticationStateProvider
+@page "/Account/Profile"
+@inject AuthenticationStateProvider AuthStateProvider
 @inject UserManager<ApplicationUser> UserManager
-@inject NavigationManager NavigationManager
 
+@* Do NOT forget to navigate the page from Account!!! *@
 
 
 <PageTitle>Profile</PageTitle>
@@ -52,6 +52,7 @@
                 <label for="phone-number">Phone Number</label>
                 <ValidationMessage For="() => ProfileInput.PhoneNumber" class="text-danger" />
             </div>
+            <!-- Submit the data -->
             <button type="submit" class="w-100 btn btn-lg btn-primary">Update Profile</button>
         </EditForm>
     </div>
@@ -60,19 +61,67 @@
 
 @code {
 
-    private ApplicationUser? User;
+    private ApplicationUser? User; // Current user
     private string? Message;
-
     /// <summary>
-    /// Gets or sets the name of the querystring parameter. If null, the querystring
-    /// parameter is assumed to have the same name as the associated property.
+    /// Gets or sets the name of the form value. If not specified, the property name will be used.
     /// </summary>
-    [SupplyParameterFromQuery]
+    [SupplyParameterFromForm]
     private ProfileInputModel ProfileInput { get; set; } = new();
 
+    protected override async Task OnInitializedAsync() // Current user's details
+    {
+        var authState = await AuthStateProvider.GetAuthenticationStateAsync(); // Current authentication state
+        var userId = authState.User.FindFirst(ClaimTypes.NameIdentifier)?.Value; // UserId from Claim
+        if (userId != null)
+        {
+            // Fetch the user from the database
+            User = await UserManager.FindByIdAsync(userId);
 
+            if (User != null)
+            {
+                ProfileInput = new ProfileInputModel
+                {
+                    FirstName = User.FirstName,
+                    LastName = User.LastName,
+                    Nickname = User.Nickname, // This can be null ("string?" in ApplicationUUser)
+                    Address = User.Address,
+                    SocialSecurityNumber = User.SocialSecurityNumber,
+                    PhoneNumber = User.PhoneNumber
+                };
+            }
+        }
+    }
 
+    // UpdateProfile - when the user enter the button Submit
+    private async Task UpdateProfile()
+    {
+        if (User == null)
+        {
+            Message = "User not found.";
+            return;
+        }
 
+        // Updating User
+        User.FirstName = ProfileInput.FirstName;
+        User.LastName = ProfileInput.LastName;
+        User.Nickname = ProfileInput.Nickname;
+        User.Address = ProfileInput.Address;
+        User.SocialSecurityNumber = ProfileInput.SocialSecurityNumber;
+        User.PhoneNumber = ProfileInput.PhoneNumber;
+
+        
+        var result = await UserManager.UpdateAsync(User); // Save the changes to the database
+
+        if (result.Succeeded)
+        {   
+            Message = "Profile updated successfully.";
+        }
+        else
+        {
+            Message = "Error updating profile: " + string.Join(", ", result.Errors.Select(e => e.Description));
+        }
+    }
     private sealed class ProfileInputModel
     {
         [Required]
