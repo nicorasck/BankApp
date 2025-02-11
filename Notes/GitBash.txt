@@ -1,0 +1,14 @@
+dotnet ef migrations add "title"
+dotnet ef database update
+
+dotnet clean
+dotnet build
+dotnet ef remove
+
+(when a repository already are added)
+git add *
+git commit -m "Message"
+git giy push
+
+dotnet add package Microsoft.EntityFramework.Tools --version 8.0.12
+dotnet add package Microsoft.EntityFramework.SQlite --version 8.0.12

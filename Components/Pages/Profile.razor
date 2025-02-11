@@ -1,0 +1,102 @@
+@page "/Profile"
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject UserManager<ApplicationUser> UserManager
+@inject NavigationManager NavigationManager
+
+
+
+<PageTitle>Profile</PageTitle>
+
+<h1>Profile</h1>
+
+<div class="row">
+    <div class="col-md-4">
+        <StatusMessage Message="@Message" />
+        <EditForm Model="ProfileInput" OnValidSubmit="UpdateProfile" FormName="profile">
+            <DataAnnotationsValidator />
+            <ValidationSummary class="text-danger" role="alert" />
+            <!-- FirstName -->
+            <div class="form-floating mb-3">
+                <InputText @bind-Value="ProfileInput.FirstName" class="form-control" placeholder="First Name" />
+                <label for="first-name">First Name</label>
+                <ValidationMessage For="() => ProfileInput.FirstName" class="text-danger" />
+            </div>
+            <!-- LastName -->
+            <div class="form-floating mb-3">
+                <InputText @bind-Value="ProfileInput.LastName" class="form-control" placeholder="Last Name" />
+                <label for="last-name">Last Name</label>
+                <ValidationMessage For="() => ProfileInput.LastName" class="text-danger" />
+            </div>
+            <!-- Nickname -->
+            <div class="form-floating mb-3">
+                <InputText @bind-Value="ProfileInput.Nickname" class="form-control" placeholder="Nickname" />
+                <label for="nickname">Nickname</label>
+                <ValidationMessage For="() => ProfileInput.Nickname" class="text-danger" />
+            </div>
+            <!-- Address -->
+            <div class="form-floating mb-3">
+                <InputText @bind-Value="ProfileInput.Address" class="form-control" placeholder="Address" />
+                <label for="address">Address</label>
+                <ValidationMessage For="() => ProfileInput.Address" class="text-danger" />
+            </div>
+            <!-- Social Security Number -->
+            <div class="form-floating mb-3">
+                <InputText @bind-Value="ProfileInput.SocialSecurityNumber" class="form-control"
+                    placeholder="Social Security Number" />
+                <label for="social-security-number">Social Security Number</label>
+                <ValidationMessage For="() => ProfileInput.SocialSecurityNumber" class="text-danger" />
+            </div>
+            <!-- PhoneNumber -->
+            <div class="form-floating mb-3">
+                <InputText @bind-Value="ProfileInput.PhoneNumber" class="form-control" placeholder="Phone Number" />
+                <label for="phone-number">Phone Number</label>
+                <ValidationMessage For="() => ProfileInput.PhoneNumber" class="text-danger" />
+            </div>
+            <button type="submit" class="w-100 btn btn-lg btn-primary">Update Profile</button>
+        </EditForm>
+    </div>
+</div>
+
+
+@code {
+
+    private ApplicationUser? User;
+    private string? Message;
+
+    /// <summary>
+    /// Gets or sets the name of the querystring parameter. If null, the querystring
+    /// parameter is assumed to have the same name as the associated property.
+    /// </summary>
+    [SupplyParameterFromQuery]
+    private ProfileInputModel ProfileInput { get; set; } = new();
+
+
+
+
+    private sealed class ProfileInputModel
+    {
+        [Required]
+        [StringLength(32, ErrorMessage = "First name must be at most 32 characters long.")]
+        public string FirstName { get; set; } = "";
+
+        [Required]
+        [StringLength(32, ErrorMessage = "Last name must be at most 32 characters long.")]
+        public string LastName { get; set; } = "";
+
+        [StringLength(16, ErrorMessage = "Nickname must be at most 16 characters long.")]
+        public string Nickname { get; set; } = "";
+
+        [Required]
+        [StringLength(100, ErrorMessage = "Address must be at most 100 characters long.")]
+        public string Address { get; set; } = "";
+
+        [Required]
+        [StringLength(12, ErrorMessage = "Social Security Number must be 12 characters long.")]
+        public string SocialSecurityNumber { get; set; } = "";
+
+        [Phone]
+        [StringLength(12, ErrorMessage = "Phone Number must be 12 characters long.")]
+        public string PhoneNumber { get; set; } = "";
+
+    }
+}
