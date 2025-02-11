@@ -6,7 +6,8 @@ namespace BankApp.Data;
 
 // ApplicationDbContext inherits from IdentityDbContext => provides Identity related
 // functions and manage the database context for the app.
-public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : IdentityDbContext<ApplicationUser>(options)
+public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
+    : IdentityDbContext<ApplicationUser>(options)
 {
     public DbSet<BankTransaction> BankTransactions { get; set; }
     public DbSet<Account> Accounts { get; set; }
@@ -15,6 +16,7 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
     // Configure the model and relationships between entities.
     protected override void OnModelCreating(ModelBuilder builder)
     {
+        base.OnModelCreating(builder);
         // Code snippet from Master Max!
         // SQLite does not support nvarchar(max), convert to TEXT
         if (Database.ProviderName == "Microsoft.EntityFrameworkCore.Sqlite")

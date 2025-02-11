@@ -120,6 +120,7 @@ C:\Users\nicho\development\projects\OPF\Blazor\BankApp\obj\Debug\net8.0\BankApp.
 C:\Users\nicho\development\projects\OPF\Blazor\BankApp\obj\Debug\net8.0\BankApp.AssemblyInfo.cs
 C:\Users\nicho\development\projects\OPF\Blazor\BankApp\obj\Debug\net8.0\BankApp.csproj.CoreCompileInputs.cache
 C:\Users\nicho\development\projects\OPF\Blazor\BankApp\obj\Debug\net8.0\BankApp.MvcApplicationPartsAssemblyInfo.cache
+C:\Users\nicho\development\projects\OPF\Blazor\BankApp\obj\Debug\net8.0\BankApp.sourcelink.json
 C:\Users\nicho\development\projects\OPF\Blazor\BankApp\obj\Debug\net8.0\scopedcss\Components\Layout\MainLayout.razor.rz.scp.css
 C:\Users\nicho\development\projects\OPF\Blazor\BankApp\obj\Debug\net8.0\scopedcss\Components\Layout\NavMenu.razor.rz.scp.css
 C:\Users\nicho\development\projects\OPF\Blazor\BankApp\obj\Debug\net8.0\scopedcss\bundle\BankApp.styles.css
