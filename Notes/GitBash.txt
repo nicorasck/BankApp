@@ -8,7 +8,8 @@ dotnet ef remove
 (when a repository already are added)
 git add *
 git commit -m "Message"
-git giy push
+git push
+git push --force (if you have updated via GitHub - do not forget to make a git pull afterwards)
 
 dotnet add package Microsoft.EntityFramework.Tools --version 8.0.12
 dotnet add package Microsoft.EntityFramework.SQlite --version 8.0.12

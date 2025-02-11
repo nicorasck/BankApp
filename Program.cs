@@ -42,7 +42,7 @@ public class Program
         // 2️⃣ ✅ THEN Configure Database
         var connectionString = builder.Configuration.GetConnectionString("DefaultConnection")
             ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
-        
+
         builder.Services.AddDbContext<ApplicationDbContext>(options =>
             options.UseSqlite(connectionString));
 
@@ -93,15 +93,34 @@ public class Program
             var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
             string email = "admin@admin.se";
             string password = "Abc123!";
+            string socialSecurityNumber = "123-45-6789";
 
             if (await userManager.FindByEmailAsync(email) == null)
             {
-                var user = new ApplicationUser { UserName = email, Email = email };
-                await userManager.CreateAsync(user, password);
-                await userManager.AddToRoleAsync(user, "Admin");
+                var user = new ApplicationUser
+                {
+                    UserName = email,
+                    Email = email,
+                    SocialSecurityNumber = socialSecurityNumber // ✅ Set SocialSecurityNumber
+                };
+
+                var result = await userManager.CreateAsync(user, password);
+
+                if (result.Succeeded)
+                {
+                    await userManager.AddToRoleAsync(user, "Admin");
+                }
+                else
+                {
+                    foreach (var error in result.Errors)
+                    {
+                        Console.WriteLine($"Error: {error.Description}");
+                    }
+                }
+
+                app.Run();
             }
         }
-
-        app.Run();
     }
 }
+
