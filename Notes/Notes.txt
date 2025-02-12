@@ -18,8 +18,8 @@
     There is a boilerplate to use, modify it
     - Use Bootstrap
 
-7a. Create an Admin page
+7. Create an Admin page
     Authorization lock for admins
     - Display lists for users.
-
-7b. Create a function to delete/add roles for users.
+    - Link functions to Account Admin
+        e.g. Delete/Add roles.

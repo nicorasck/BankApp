@@ -11,11 +11,16 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
 {
     public DbSet<BankTransaction> BankTransactions { get; set; }
     public DbSet<Account> Accounts { get; set; }
-    public DbSet<ApplicationUser> Users { get; set; }
 
     // Configure the model and relationships between entities.
     protected override void OnModelCreating(ModelBuilder builder)
     {
+        // builder.Entity<BankTransaction>()
+        // .HasOne(t => t.FromAccount)  // One-to-Many => Reference Account entity
+        // .WithMany(a => a.BankTransactions)  // One-to-Many => An Account has many Transactions
+        // .HasForeignKey(t => t.FromAccountId)  // Defining FK "explicitly"
+        // .OnDelete(DeleteBehavior.Restrict); // Feedback => use Cascade if needed(?)
+
         base.OnModelCreating(builder);
         // Code snippet from Master Max!
         // SQLite does not support nvarchar(max), convert to TEXT
@@ -33,5 +38,4 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
             }
         }
     }
-
 }

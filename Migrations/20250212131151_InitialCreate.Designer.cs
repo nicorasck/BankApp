@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BankApp.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250211230933_Added SocialSecurityNumber To User")]
-    partial class AddedSocialSecurityNumberToUser
+    [Migration("20250212131151_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -29,7 +29,6 @@ namespace BankApp.Migrations
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("Address")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<string>("ConcurrencyStamp")
@@ -44,11 +43,9 @@ namespace BankApp.Migrations
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("FirstName")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<string>("LastName")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<bool>("LockoutEnabled")
@@ -105,8 +102,9 @@ namespace BankApp.Migrations
 
             modelBuilder.Entity("BankApp.Models.Account", b =>
                 {
-                    b.Property<string>("Id")
-                        .HasColumnType("TEXT");
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
 
                     b.Property<string>("AccountName")
                         .HasColumnType("TEXT");
@@ -150,10 +148,6 @@ namespace BankApp.Migrations
                     b.Property<int>("FromAccountId")
                         .HasColumnType("INTEGER");
 
-                    b.Property<string>("FromAccountId1")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
                     b.Property<bool>("IsReserved")
                         .HasColumnType("INTEGER");
 
@@ -170,13 +164,9 @@ namespace BankApp.Migrations
                     b.Property<DateTime>("TransactionDate")
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("TransactionNumber")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
                     b.HasKey("Id");
 
-                    b.HasIndex("FromAccountId1");
+                    b.HasIndex("FromAccountId");
 
                     b.ToTable("BankTransactions");
                 });
@@ -324,7 +314,7 @@ namespace BankApp.Migrations
                 {
                     b.HasOne("BankApp.Models.Account", "FromAccount")
                         .WithMany("BankTransactions")
-                        .HasForeignKey("FromAccountId1")
+                        .HasForeignKey("FromAccountId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 

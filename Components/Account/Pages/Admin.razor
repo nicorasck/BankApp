@@ -1,0 +1,22 @@
+@page "/Admin"
+@using Microsoft.AspNetCore.Authorization
+@attribute [Authorize(Roles = "Admin")]
+@inject UserManager<ApplicationUser> UserManager
+
+<h3>Admin Page</h3>
+
+<ul>
+    @foreach (var user in users)
+    {
+        <li>@user.UserName - @user.Email</li>
+    }
+</ul>
+
+@code {
+    private List<ApplicationUser> users = new List<ApplicationUser>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        users = UserManager.Users.ToList();
+    }
+}

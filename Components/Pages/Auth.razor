@@ -1,5 +1,5 @@
 ﻿@page "/auth"
-
+@using BankApp.Components.Account.Pages
 @using Microsoft.AspNetCore.Authorization
 
 @attribute [Authorize]
@@ -10,4 +10,8 @@
 
 <AuthorizeView>
     Hello @context.User.Identity?.Name!
+
+    <div class="Admin-page" style="margin-top: 20px;">
+        <Admin />
+    </div>
 </AuthorizeView>

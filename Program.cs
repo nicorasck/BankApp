@@ -8,8 +8,8 @@ using BankApp.Data;
 namespace BankApp;
 
 public class Program
-{
-    public static async Task Main(string[] args)
+{   
+     public static async Task Main(string[] args)
     {
         var builder = WebApplication.CreateBuilder(args);
 
@@ -23,30 +23,23 @@ public class Program
         builder.Services.AddScoped<AuthenticationStateProvider, IdentityRevalidatingAuthenticationStateProvider>();
 
         builder.Services.AddAuthentication(options =>
-        {
-            options.DefaultScheme = IdentityConstants.ApplicationScheme;
-            options.DefaultSignInScheme = IdentityConstants.ExternalScheme;
-        })
-        .AddIdentityCookies();
+            {
+                options.DefaultScheme = IdentityConstants.ApplicationScheme;
+                options.DefaultSignInScheme = IdentityConstants.ExternalScheme;
+            })
+            .AddIdentityCookies();
 
-        // 1️⃣ ✅ Ensure Identity services are configured first
-        builder.Services.AddIdentityCore<ApplicationUser>(options =>
-        {
-            options.SignIn.RequireConfirmedAccount = false;
-        })
-        .AddRoles<IdentityRole>()
-        .AddEntityFrameworkStores<ApplicationDbContext>()
-        .AddSignInManager()
-        .AddDefaultTokenProviders();
-
-        // 2️⃣ ✅ THEN Configure Database
-        var connectionString = builder.Configuration.GetConnectionString("DefaultConnection")
-            ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
-
+        // var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
         builder.Services.AddDbContext<ApplicationDbContext>(options =>
-            options.UseSqlite(connectionString));
-
+            options.UseSqlite("Data Source =app.db"));
         builder.Services.AddDatabaseDeveloperPageExceptionFilter();
+
+        builder.Services.AddIdentityCore<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = false)
+            .AddRoles<IdentityRole>() //adding role
+            .AddEntityFrameworkStores<ApplicationDbContext>()
+            .AddSignInManager()
+            .AddDefaultTokenProviders();
+
         builder.Services.AddSingleton<IEmailSender<ApplicationUser>, IdentityNoOpEmailSender>();
 
         var app = builder.Build();
@@ -59,10 +52,12 @@ public class Program
         else
         {
             app.UseExceptionHandler("/Error");
+            // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
             app.UseHsts();
         }
 
         app.UseHttpsRedirection();
+
         app.UseStaticFiles();
         app.UseAntiforgery();
 
@@ -72,55 +67,40 @@ public class Program
         // Add additional endpoints required by the Identity /Account Razor components.
         app.MapAdditionalIdentityEndpoints();
 
-        // 3️⃣ ✅ Ensure Identity Roles are created
-        using (var scope = app.Services.CreateScope())
-        {
-            var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
-            var roles = new[] { "Admin", "User" };
 
-            foreach (var role in roles)
-            {
-                if (!await roleManager.RoleExistsAsync(role))
-                {
-                    await roleManager.CreateAsync(new IdentityRole(role));
-                }
-            }
-        }
+        //creating a scope
+            using(var scope = app.Services.CreateScope()){ //this will run in a separate environment
 
-        // 4️⃣ ✅ Ensure Default Admin User is created
-        using (var scope = app.Services.CreateScope())
-        {
-            var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
-            string email = "admin@admin.se";
-            string password = "Abc123!";
-            string socialSecurityNumber = "123-45-6789";
+                var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>(); 
 
-            if (await userManager.FindByEmailAsync(email) == null)
-            {
-                var user = new ApplicationUser
-                {
-                    UserName = email,
-                    Email = email,
-                    SocialSecurityNumber = socialSecurityNumber // ✅ Set SocialSecurityNumber
-                };
+                var roles = new[] {"Admin", "User"};
 
-                var result = await userManager.CreateAsync(user, password);
-
-                if (result.Succeeded)
-                {
-                    await userManager.AddToRoleAsync(user, "Admin");
-                }
-                else
-                {
-                    foreach (var error in result.Errors)
-                    {
-                        Console.WriteLine($"Error: {error.Description}");
+                foreach(var role in roles){
+                    if(!await roleManager.RoleExistsAsync(role)){
+                        await roleManager.CreateAsync(new IdentityRole(role));
                     }
                 }
-
-                app.Run();
             }
-        }
-    }
-}
 
+        using(var scope = app.Services.CreateScope()){ //this will run in a separate environment
+
+            var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>(); 
+
+            string email = "admin@admin.se";
+            string password = "Asd123.";
+
+            if(await userManager.FindByEmailAsync(email) == null){
+                var user = new ApplicationUser();
+                user.UserName = email;
+                user.Email = email;
+                user.SocialSecurityNumber = "20000101";
+
+                await userManager.CreateAsync(user, password);
+                await userManager.AddToRoleAsync(user,"Admin");
+            }
+            
+        }
+
+        app.Run();
+    }
+    }

@@ -24,10 +24,6 @@ build_property.EnableCodeStyleSeverity =
 build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xBY2NvdW50XFBhZ2VzXEFjY2Vzc0RlbmllZC5yYXpvcg==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/nicho/development/projects/OPF/Blazor/BankApp/Components/Account/Pages/Admin.razor]
-build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xBY2NvdW50XFBhZ2VzXEFkbWluLnJhem9y
-build_metadata.AdditionalFiles.CssScope = 
-
 [C:/Users/nicho/development/projects/OPF/Blazor/BankApp/Components/Account/Pages/ConfirmEmail.razor]
 build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xBY2NvdW50XFBhZ2VzXENvbmZpcm1FbWFpbC5yYXpvcg==
 build_metadata.AdditionalFiles.CssScope = 
@@ -106,10 +102,6 @@ build_metadata.AdditionalFiles.CssScope =
 
 [C:/Users/nicho/development/projects/OPF/Blazor/BankApp/Components/Account/Pages/Manage/PersonalData.razor]
 build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xBY2NvdW50XFBhZ2VzXE1hbmFnZVxQZXJzb25hbERhdGEucmF6b3I=
-build_metadata.AdditionalFiles.CssScope = 
-
-[C:/Users/nicho/development/projects/OPF/Blazor/BankApp/Components/Account/Pages/Manage/Profile.razor]
-build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xBY2NvdW50XFBhZ2VzXE1hbmFnZVxQcm9maWxlLnJhem9y
 build_metadata.AdditionalFiles.CssScope = 
 
 [C:/Users/nicho/development/projects/OPF/Blazor/BankApp/Components/Account/Pages/Manage/ResetAuthenticator.razor]
@@ -198,6 +190,10 @@ build_metadata.AdditionalFiles.CssScope =
 
 [C:/Users/nicho/development/projects/OPF/Blazor/BankApp/Components/Pages/Home.razor]
 build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xIb21lLnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/nicho/development/projects/OPF/Blazor/BankApp/Components/Pages/Profile.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xQcm9maWxlLnJhem9y
 build_metadata.AdditionalFiles.CssScope = 
 
 [C:/Users/nicho/development/projects/OPF/Blazor/BankApp/Components/Pages/Weather.razor]

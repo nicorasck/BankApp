@@ -1,4 +1,4 @@
-@page "/Account/Profile"
+@page "/EditProfile"
 @inject AuthenticationStateProvider AuthStateProvider
 @inject UserManager<ApplicationUser> UserManager
 
@@ -11,7 +11,7 @@
 
 <div class="row">
     <div class="col-md-4">
-        <StatusMessage Message="@Message" />
+        @* <StatusMessage Message="@Message" /> *@
         <EditForm Model="ProfileInput" OnValidSubmit="UpdateProfile" FormName="profile">
             <DataAnnotationsValidator />
             <ValidationSummary class="text-danger" role="alert" />
@@ -55,12 +55,15 @@
             <!-- Submit the data -->
             <button type="submit" class="w-100 btn btn-lg btn-primary">Update Profile</button>
         </EditForm>
+        <!-- Button to go back to Profile view -->
+            <NavLink href="/Account/Manage">
+                <button type="Edit" class="w-100 btn btn-lg btn-primary" style="margin-top: 10px; color:white ;">Back</button>
+            </NavLink>
     </div>
 </div>
 
 
 @code {
-
     private ApplicationUser? User; // Current user
     private string? Message;
     /// <summary>
@@ -68,8 +71,7 @@
     /// </summary>
     [SupplyParameterFromForm]
     private ProfileInputModel ProfileInput { get; set; } = new();
-
-    protected override async Task OnInitializedAsync() // Current user's details
+    protected override async Task OnInitializedAsync() // Current user details
     {
         var authState = await AuthStateProvider.GetAuthenticationStateAsync(); // Current authentication state
         var userId = authState.User.FindFirst(ClaimTypes.NameIdentifier)?.Value; // UserId from Claim

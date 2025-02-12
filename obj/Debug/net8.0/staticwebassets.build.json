@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "GFJayOWlpLD7+fnnfqzHR8LBfZBMQmzvakTAtFjMH00=",
+  "Hash": "qYYsW7EwF7lg8Aw5IiVU6IPxymImVOdp1HM6HmJEm44=",
   "Source": "BankApp",
   "BasePath": "_content/BankApp",
   "Mode": "Default",
@@ -249,7 +249,7 @@
         },
         {
           "Name": "Last-Modified",
-          "Value": "Tue, 11 Feb 2025 00:07:25 GMT"
+          "Value": "Wed, 12 Feb 2025 08:43:20 GMT"
         },
         {
           "Name": "Cache-Control",
@@ -286,7 +286,7 @@
         },
         {
           "Name": "Last-Modified",
-          "Value": "Tue, 11 Feb 2025 00:07:25 GMT"
+          "Value": "Wed, 12 Feb 2025 08:43:20 GMT"
         },
         {
           "Name": "Cache-Control",
@@ -331,7 +331,7 @@
         },
         {
           "Name": "Last-Modified",
-          "Value": "Tue, 11 Feb 2025 00:07:25 GMT"
+          "Value": "Wed, 12 Feb 2025 08:43:20 GMT"
         },
         {
           "Name": "Cache-Control",
@@ -376,7 +376,7 @@
         },
         {
           "Name": "Last-Modified",
-          "Value": "Tue, 11 Feb 2025 00:07:25 GMT"
+          "Value": "Wed, 12 Feb 2025 08:43:20 GMT"
         },
         {
           "Name": "Cache-Control",

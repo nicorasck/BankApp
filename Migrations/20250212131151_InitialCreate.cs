@@ -30,8 +30,11 @@ namespace BankApp.Migrations
                 columns: table => new
                 {
                     Id = table.Column<string>(type: "TEXT", nullable: false),
+                    FirstName = table.Column<string>(type: "TEXT", nullable: true),
+                    LastName = table.Column<string>(type: "TEXT", nullable: true),
+                    Nickname = table.Column<string>(type: "TEXT", nullable: true),
                     SocialSecurityNumber = table.Column<string>(type: "TEXT", nullable: false),
-                    Address = table.Column<string>(type: "TEXT", nullable: false),
+                    Address = table.Column<string>(type: "TEXT", nullable: true),
                     UserName = table.Column<string>(type: "TEXT", maxLength: 256, nullable: true),
                     NormalizedUserName = table.Column<string>(type: "TEXT", maxLength: 256, nullable: true),
                     Email = table.Column<string>(type: "TEXT", maxLength: 256, nullable: true),
@@ -77,7 +80,8 @@ namespace BankApp.Migrations
                 name: "Accounts",
                 columns: table => new
                 {
-                    Id = table.Column<string>(type: "TEXT", nullable: false),
+                    Id = table.Column<int>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
                     AccountNumber = table.Column<string>(type: "TEXT", nullable: false),
                     AccountName = table.Column<string>(type: "TEXT", nullable: true),
                     Balance = table.Column<decimal>(type: "TEXT", nullable: false),
@@ -190,20 +194,18 @@ namespace BankApp.Migrations
                         .Annotation("Sqlite:Autoincrement", true),
                     ToAccount = table.Column<string>(type: "TEXT", nullable: false),
                     FromAccountId = table.Column<int>(type: "INTEGER", nullable: false),
-                    FromAccountId1 = table.Column<string>(type: "TEXT", nullable: false),
                     TransactionDate = table.Column<DateTime>(type: "TEXT", nullable: false),
                     OutgoingBalance = table.Column<decimal>(type: "TEXT", nullable: false),
                     Currency = table.Column<int>(type: "INTEGER", nullable: false),
                     IsReserved = table.Column<bool>(type: "INTEGER", nullable: false),
-                    Message = table.Column<string>(type: "TEXT", nullable: true),
-                    TransactionNumber = table.Column<string>(type: "TEXT", nullable: false)
+                    Message = table.Column<string>(type: "TEXT", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_BankTransactions", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_BankTransactions_Accounts_FromAccountId1",
-                        column: x => x.FromAccountId1,
+                        name: "FK_BankTransactions_Accounts_FromAccountId",
+                        column: x => x.FromAccountId,
                         principalTable: "Accounts",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -252,9 +254,9 @@ namespace BankApp.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_BankTransactions_FromAccountId1",
+                name: "IX_BankTransactions_FromAccountId",
                 table: "BankTransactions",
-                column: "FromAccountId1");
+                column: "FromAccountId");
         }
 
         /// <inheritdoc />
