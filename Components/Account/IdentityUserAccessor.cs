@@ -7,6 +7,10 @@ internal sealed class IdentityUserAccessor(UserManager<ApplicationUser> userMana
 {
     public async Task<ApplicationUser> GetRequiredUserAsync(HttpContext context)
     {
+        if (context?.User == null)
+        {
+            throw new InvalidOperationException("Is NULL");
+        }
         var user = await userManager.GetUserAsync(context.User);
 
         if (user is null)
