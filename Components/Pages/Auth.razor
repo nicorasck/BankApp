@@ -9,8 +9,8 @@
 <h1>You are authenticated</h1>
 
 <AuthorizeView>
-    Hello @context.User.Identity?.Name!
-
+    You are logged in as: [@context.User.Identity?.Name]
+    
     <div class="Admin-page" style="margin-top: 20px;">
         <Admin />
     </div>

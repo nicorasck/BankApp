@@ -1,13 +1,12 @@
 ﻿@page "/Account/Manage"
-
 @using System.ComponentModel.DataAnnotations
 @using Microsoft.AspNetCore.Identity
 @using BankApp.Data
 
 @inject UserManager<ApplicationUser> UserManager
-@inject SignInManager<ApplicationUser> SignInManager
-@inject IdentityUserAccessor UserAccessor
-@inject IdentityRedirectManager RedirectManager
+@inject NavigationManager NavigationManager
+@inject ILogger<Register> Logger
+@rendermode InteractiveServer 
 
 <PageTitle>Profile</PageTitle>
 
@@ -16,14 +15,13 @@
 
 <div class="row">
     <div class="col-md-6">
-        <!-- Form for updating user profile -->
-        <EditForm Model="Input" FormName="profile" OnValidSubmit="UpdateUser" method="post">
+        <EditForm Model="Input" OnValidSubmit="Save" FormName="profile">
             <DataAnnotationsValidator />
             <ValidationSummary class="text-danger" role="alert" />
             <div class="fw-bold">Username (optional)</div>
             <div class="form-floating mb-3">
                 <input type="text" value="@username" class="form-control" placeholder="Please choose your username." disabled />
-                <label for="username" class="form-label">@user.UserName</label>
+                <label for="username" class="form-label">@(username ?? "Loading...")</label>
             </div>
             <!-- First Name -->
             <div class="fw-bold">First name</div>
@@ -42,9 +40,9 @@
             <!-- Nickname -->
             <div class="fw-bold">Nickname</div>
             <div class="form-floating mb-3">
-                <InputText @bind-Value="Input.Nickname" class="form-control" placeholder="Nickname" />
+                <InputText @bind-Value="Input.NickName" class="form-control" placeholder="NickName" />
                 <label for="nickname">Nickname</label>
-                <ValidationMessage For="() => Input.Nickname" class="text-danger" />
+                <ValidationMessage For="() => Input.NickName" class="text-danger" />
             </div>
             <!-- Address -->
             <div class="fw-bold">Address</div>
@@ -74,83 +72,114 @@
 </div>
 
 @code {
-    private ApplicationUser? user;
-    private string? Message;
+    private IEnumerable<IdentityError>? identityErrors;
+    private ApplicationUser? _user;
     private string? username;
 
     [CascadingParameter]
-    private HttpContext HttpContext { get; set; } = default!;
+    private Task<AuthenticationState>? AuthenticationStateTask { get; set; }
 
     [SupplyParameterFromForm]
     private InputModel Input { get; set; } = new();
 
+    private string? Message => identityErrors is null ? null : $"Error: {string.Join(", ", identityErrors.Select(error => error.Description))}";
+
     protected override async Task OnInitializedAsync()
     {
-        user = await UserAccessor.GetRequiredUserAsync(HttpContext);
-
-        if (user != null)
+        if (AuthenticationStateTask is not null)
         {
-            Input = new InputModel
+            var authState = await AuthenticationStateTask;
+            var user = authState.User;
+            var userId = UserManager.GetUserId(user);
+            if (userId is not null)
             {
-                FirstName = user.FirstName,
-                LastName = user.LastName,
-                Nickname = user.Nickname,
-                Address = user.Address,
-                SocialSecurityNumber = user.SocialSecurityNumber,
-                PhoneNumber = user.PhoneNumber
-            };
+                _user = await UserManager.FindByIdAsync(userId);
+                if (_user is not null)
+                {
+                    username = _user.UserName;
+                    Input.FirstName = _user.FirstName;
+                    Input.LastName = _user.LastName;
+                    Input.NickName = _user.Nickname;
+                    Input.SocialSecurityNumber = _user.SocialSecurityNumber;
+                    Input.Address = _user.Address;
+                    Input.PhoneNumber = _user.PhoneNumber;
+                }
+            }
         }
     }
 
-    private async Task UpdateUser()
+    private async Task Save()
     {
-        if (user == null)
+        identityErrors = null;
+        var user = await UpdateUser();
+        if (user is null)
         {
-            Message = "Error: User not found.";
+            identityErrors = new[] { new IdentityError { Description = "User not found." } };
             return;
         }
 
         user.FirstName = Input.FirstName;
         user.LastName = Input.LastName;
-        user.Nickname = Input.Nickname;
-        user.Address = Input.Address;
+        user.Nickname = Input.NickName;
         user.SocialSecurityNumber = Input.SocialSecurityNumber;
+        user.Address = Input.Address;
         user.PhoneNumber = Input.PhoneNumber;
 
         var result = await UserManager.UpdateAsync(user);
         if (!result.Succeeded)
         {
-            Message = "Error updating profile: " + string.Join(", ", result.Errors.Select(e => e.Description));
+            identityErrors = result.Errors;
             return;
         }
 
-        await SignInManager.RefreshSignInAsync(user);
-        RedirectManager.RedirectToCurrentPageWithStatus("Your profile has been updated", HttpContext);
+        Logger.LogInformation("User profile updated successfully.");
+        StateHasChanged();
+    }
+
+    private async Task<ApplicationUser?> UpdateUser()
+    {
+        if (AuthenticationStateTask is not null)
+        {
+            var authState = await AuthenticationStateTask;
+            var user = authState.User;
+            var userId = UserManager.GetUserId(user);
+            if (userId is not null)
+            {
+                return await UserManager.FindByIdAsync(userId);
+            }
+        }
+        return null;
     }
 
     private sealed class InputModel
     {
         [Required]
         [StringLength(32, ErrorMessage = "Max 32 characters.")]
+        [Display(Name = "FirstName")]
         public string FirstName { get; set; } = "";
 
         [Required]
         [StringLength(32, ErrorMessage = "Max 32 characters.")]
+        [Display(Name = "LastName")]
         public string LastName { get; set; } = "";
 
         [StringLength(16, MinimumLength = 5, ErrorMessage = "Nickname must be 5-16 characters.")]
-        public string? Nickname { get; set; } = "";
+        [Display(Name = "NickName")]
+        public string? NickName { get; set; } = "";
 
         [Required]
         [StringLength(100, ErrorMessage = "Max 100 characters.")]
+        [Display(Name = "Address")]
         public string Address { get; set; } = "";
 
         [Required]
         [StringLength(12, MinimumLength = 12, ErrorMessage = "SSN must be exactly 12 digits.")]
+        [Display(Name = "SocialSecurityNumber")]
         public string SocialSecurityNumber { get; set; } = "";
 
         [Phone]
         [StringLength(12, ErrorMessage = "Max 12 characters.")]
+        [Display(Name = "PhoneNumber")]
         public string? PhoneNumber { get; set; } = "";
     }
 }

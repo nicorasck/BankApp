@@ -13,3 +13,5 @@ git push --force (if you have updated via GitHub - do not forget to make a git p
 
 dotnet add package Microsoft.EntityFramework.Tools --version 8.0.12
 dotnet add package Microsoft.EntityFramework.SQlite --version 8.0.12
+dotnet add package Microsoft.AspNetCore.Components.Web --version 8.0.13
+ dotnet add package Microsoft.AspNetCore.Components.WebAssembly.Server --version 8.0.13

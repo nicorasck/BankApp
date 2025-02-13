@@ -12,11 +12,7 @@
 <PageTitle>Profile</PageTitle>
 
 <h3>Profile</h3>
-
-@if (!string.IsNullOrEmpty(Message))
-{
-    <div class="alert alert-info">@Message</div>
-}
+<StatusMessage Message="@Message" />
 
 <div class="row">
     <div class="col-md-6">
@@ -90,14 +86,12 @@
 
     protected override async Task OnInitializedAsync()
     {
-        // Fetch the currently logged-in user
         user = await UserAccessor.GetRequiredUserAsync(HttpContext);
 
-        
         if (user != null)
         {
             Input = new InputModel
-            {   // adds data input from user
+            {
                 FirstName = user.FirstName,
                 LastName = user.LastName,
                 Nickname = user.Nickname,
@@ -108,7 +102,6 @@
         }
     }
 
-    // UpdateUser - when the user enter the button Update
     private async Task UpdateUser()
     {
         if (user == null)
@@ -117,7 +110,6 @@
             return;
         }
 
-        // Update user properties with input values
         user.FirstName = Input.FirstName;
         user.LastName = Input.LastName;
         user.Nickname = Input.Nickname;
@@ -125,7 +117,6 @@
         user.SocialSecurityNumber = Input.SocialSecurityNumber;
         user.PhoneNumber = Input.PhoneNumber;
 
-        // Save changes to the database
         var result = await UserManager.UpdateAsync(user);
         if (!result.Succeeded)
         {
@@ -133,29 +124,28 @@
             return;
         }
 
-        // Refresh sign-in session and redirect user
         await SignInManager.RefreshSignInAsync(user);
         RedirectManager.RedirectToCurrentPageWithStatus("Your profile has been updated", HttpContext);
     }
 
     private sealed class InputModel
     {
-        [Required(ErrorMessage = "First Name is required.")]
+        [Required]
         [StringLength(32, ErrorMessage = "Max 32 characters.")]
         public string FirstName { get; set; } = "";
 
-        [Required(ErrorMessage = "Last Name is required.")]
+        [Required]
         [StringLength(32, ErrorMessage = "Max 32 characters.")]
         public string LastName { get; set; } = "";
 
         [StringLength(16, MinimumLength = 5, ErrorMessage = "Nickname must be 5-16 characters.")]
         public string? Nickname { get; set; } = "";
 
-        [Required(ErrorMessage = "Address is required.")]
+        [Required]
         [StringLength(100, ErrorMessage = "Max 100 characters.")]
         public string Address { get; set; } = "";
 
-        [Required(ErrorMessage = "Social Security Number is required.")]
+        [Required]
         [StringLength(12, MinimumLength = 12, ErrorMessage = "SSN must be exactly 12 digits.")]
         public string SocialSecurityNumber { get; set; } = "";
 
