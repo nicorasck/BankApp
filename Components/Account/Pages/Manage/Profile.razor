@@ -1,13 +1,7 @@
 @page "/EditProfile"
 @inject AuthenticationStateProvider AuthStateProvider
 @inject UserManager<ApplicationUser> UserManager
-@inject SignInManager<ApplicationUser> SignInManager
-@inject IdentityUserAccessor UserAccessor
-@inject IdentityRedirectManager RedirectManager
 
-@using BankApp.Data
-@using System.ComponentModel.DataAnnotations
-@using Microsoft.AspNetCore.Identity
 
 <PageTitle>Profile</PageTitle>
 
@@ -19,82 +13,100 @@
 }
 
 <div class="row">
-    <div class="col-md-6">
-        <EditForm Model="ProfileInput" FormName="EditProfile" OnValidSubmit="UpdateProfile" method="post">
+    <div class="col-md-4">
+    <!-- EditForm Component:
+    The EditForm component wraps the form fields and the submit button.
+    It has two key properties:
+    Model: Specifies the model (ProfileInput) that the form is bound to.
+    OnValidSubmit: Specifies the method (UpdateProfile) to call when the
+    form is submitted and all validation passes.  -->
+        <EditForm Model="ProfileInput" OnValidSubmit="UpdateProfile" FormName="profile">
             <DataAnnotationsValidator />
             <ValidationSummary class="text-danger" role="alert" />
-
+            <!-- FirstName -->
             <div class="form-floating mb-3">
-                <InputText @bind-Value="ProfileInput.FirstName" class="form-control" placeholder="Enter First Name" />
-                <label for="first-name" class="form-label">First Name</label>
+                <InputText @bind-Value="ProfileInput.FirstName" class="form-control" placeholder="First Name" required />
+                <label for="first-name">First Name</label>
                 <ValidationMessage For="() => ProfileInput.FirstName" class="text-danger" />
             </div>
-
+            <!-- LastName -->
             <div class="form-floating mb-3">
-                <InputText @bind-Value="ProfileInput.LastName" class="form-control" placeholder="Enter Last Name" />
-                <label for="last-name" class="form-label">Last Name</label>
+                <InputText @bind-Value="ProfileInput.LastName" class="form-control" placeholder="Last Name" required/>
+                <label for="last-name">Last Name</label>
                 <ValidationMessage For="() => ProfileInput.LastName" class="text-danger" />
             </div>
-
+            <!-- Nickname -->
             <div class="form-floating mb-3">
-                <InputText @bind-Value="ProfileInput.Nickname" class="form-control" placeholder="Enter Nickname" />
-                <label for="nickname" class="form-label">Nickname</label>
+                <InputText @bind-Value="ProfileInput.Nickname" class="form-control" placeholder="Nickname" required />
+                <label for="nickname">Nickname</label>
                 <ValidationMessage For="() => ProfileInput.Nickname" class="text-danger" />
             </div>
-
+            <!-- Address -->
             <div class="form-floating mb-3">
-                <InputText @bind-Value="ProfileInput.SocialSecurityNumber" class="form-control"
-                    placeholder="Enter SSN (10-12 digits)" />
-                <label for="SocialSecurityNumber" class="form-label">Social Security Number</label>
-                <ValidationMessage For="() => ProfileInput.SocialSecurityNumber" class="text-danger" />
-            </div>
-
-            <div class="form-floating mb-3">
-                <InputText @bind-Value="ProfileInput.Address" class="form-control" placeholder="Enter Address" />
-                <label for="Address" class="form-label">Address</label>
+                <InputText @bind-Value="ProfileInput.Address" class="form-control" placeholder="Address" required />
+                <label for="address">Address</label>
                 <ValidationMessage For="() => ProfileInput.Address" class="text-danger" />
             </div>
-
+            <!-- Social Security Number -->
             <div class="form-floating mb-3">
-                <InputText @bind-Value="ProfileInput.PhoneNumber" class="form-control"
-                    placeholder="Enter Phone Number" />
-                <label for="PhoneNumber" class="form-label">Phone Number</label>
+                <InputText @bind-Value="ProfileInput.SocialSecurityNumber" class="form-control"
+                    placeholder="Social Security Number" required/>
+                <label for="social-security-number">Social Security Number</label>
+                <ValidationMessage For="() => ProfileInput.SocialSecurityNumber" class="text-danger" />
+            </div>
+            <!-- PhoneNumber -->
+            <div class="form-floating mb-3">
+                <InputText @bind-Value="ProfileInput.PhoneNumber" class="form-control" placeholder="Phone Number" />
+                <label for="phone-number">Phone Number</label>
                 <ValidationMessage For="() => ProfileInput.PhoneNumber" class="text-danger" />
             </div>
-
-            <button type="submit" class="w-100 btn btn-lg btn-primary">Save</button>
+            <!-- Submit the data -->
+            <button type="submit" class="w-100 btn btn-lg btn-primary">Update Profile</button>
         </EditForm>
+        <!-- Button to go back to Profile view -->
+            <NavLink href="/Account/Manage">
+                <button type="button" class="w-100 btn btn-lg btn-primary" style="margin-top: 10px; color: white ;">Back</button>
+            </NavLink>
     </div>
 </div>
 
-@code {
-    private ApplicationUser? User;
-    private string? Message;
-    private string? phoneNumber;
-    [CascadingParameter]
-    private HttpContext HttpContext { get; set; } = default!;
 
-    
+@code {
+    private ApplicationUser? User; // Current user
+    private string? Message;
+    /// <summary>
+    /// Gets or sets the name of the form value. If not specified, the property name will be used.
+    /// </summary>
     [SupplyParameterFromForm]
     private ProfileInputModel ProfileInput { get; set; } = new();
-
-    protected override async Task OnInitializedAsync()
+    protected override async Task OnInitializedAsync() // Current user details
     {
-        User = await UserAccessor.GetRequiredUserAsync(HttpContext);
-        phoneNumber = await UserManager.GetPhoneNumberAsync(User);
+        var authState = await AuthStateProvider.GetAuthenticationStateAsync(); // Current authentication state
+        var userId = authState.User.FindFirst(ClaimTypes.NameIdentifier)?.Value; // UserId from Claim
+        if (userId != null)
+        {
+            // Fetch the user from the database
+            User = await UserManager.FindByIdAsync(userId);
 
-        // Load user data
-        ProfileInput.FirstName = User.FirstName;
-        ProfileInput.LastName = User.LastName;
-        ProfileInput.Nickname = User.Nickname;
-        ProfileInput.SocialSecurityNumber = User.SocialSecurityNumber;
-        ProfileInput.Address = User.Address;
-        ProfileInput.PhoneNumber = User.PhoneNumber;
+            if (User != null)
+            {
+                ProfileInput = new ProfileInputModel
+                {   // adds data input from user
+                    FirstName = User.FirstName,
+                    LastName = User.LastName,
+                    Nickname = User.Nickname,
+                    Address = User.Address,
+                    SocialSecurityNumber = User.SocialSecurityNumber,
+                    PhoneNumber = User.PhoneNumber
+                };
+            }
+        }
     }
 
+    // UpdateProfile - when the user enter the button Submit
     private async Task UpdateProfile()
     {
-        bool isUpdated = false;
+        Console.WriteLine("TEST - works!"); // Debugging
 
         if (User == null)
         {
@@ -102,56 +114,61 @@
             return;
         }
 
-        if (ProfileInput.FirstName != User.FirstName ||
-        ProfileInput.LastName != User.LastName ||
-        ProfileInput.Nickname != User.Nickname ||
-        ProfileInput.SocialSecurityNumber != User.SocialSecurityNumber ||
-        ProfileInput.Address != User.Address ||
-        ProfileInput.PhoneNumber != User.PhoneNumber)
+        var existingUser = await UserManager.FindByIdAsync(User.Id);
+        if (existingUser == null)
         {
-            User.FirstName = ProfileInput.FirstName;
-            User.LastName = ProfileInput.LastName;
-            User.Nickname = ProfileInput.Nickname;
-            User.SocialSecurityNumber = ProfileInput.SocialSecurityNumber;
-            User.Address = ProfileInput.Address;
-            User.PhoneNumber = ProfileInput.PhoneNumber;
-
-            var updateResult = await UserManager.UpdateAsync(User);
-            isUpdated = updateResult.Succeeded;
+            Message = "User not found.";
+            return;
         }
 
-        if (isUpdated)
-        {
-            await SignInManager.RefreshSignInAsync(User);
-            RedirectManager.RedirectToCurrentPageWithStatus("Your profile has been updated", HttpContext);
-        }
+        // Updating User
+        existingUser.FirstName = ProfileInput.FirstName;
+        existingUser.LastName = ProfileInput.LastName;
+        existingUser.Nickname = ProfileInput.Nickname;
+        existingUser.Address = ProfileInput.Address;
+        existingUser.SocialSecurityNumber = ProfileInput.SocialSecurityNumber;
+        existingUser.PhoneNumber = ProfileInput.PhoneNumber;
 
-        StateHasChanged();
+        
+        var result = await UserManager.UpdateAsync(User); // Save the changes to the database
+
+        if (result.Succeeded)
+        {   
+            Message = "Profile updated successfully.";
+            Console.WriteLine("TEST - works!"); // Debugging
+            StateHasChanged();
+        }
+        else
+        {
+            Message = "Error updating profile: " + string.Join(", ", result.Errors.Select(e => e.Description));
+            Console.WriteLine("TEST - works!"); // Debugging
+
+        }
     }
-
     private sealed class ProfileInputModel
     {
-        [Required(ErrorMessage = "First Name is required.")]
-        [StringLength(50, MinimumLength = 2, ErrorMessage = "First Name must be at least 2 characters long.")]
-        public string? FirstName { get; set; }
+        [Required(ErrorMessage = "The FirstName field is required.")] // Message will display when this field is empty when trying to save/update.
+        [StringLength(32, ErrorMessage = "First name can be at max 32 characters long.")]
+        public string? FirstName { get; set; } = "";
 
-        [Required(ErrorMessage = "Last Name is required.")]
-        [StringLength(50, MinimumLength = 2, ErrorMessage = "Last Name must be at least 2 characters long.")]
-        public string? LastName { get; set; }
+        [Required(ErrorMessage = "The LastName field is required.")]
+        [StringLength(32, ErrorMessage = "Last name can be at max 32 characters long")]
+        public string? LastName { get; set; } = "";
+
+        [StringLength(16, ErrorMessage = "Nickname must be at least 5 characters long and max 16 characters long.", MinimumLength = 5)]
+        public string? Nickname { get; set; } = "";
+
+        [Required(ErrorMessage = "The Address field is required.")]
+        [StringLength(100, ErrorMessage = "Address must be at most 100 characters long.")]
+        public string? Address { get; set; } = "";
+
+        [Required(ErrorMessage = "The SocialSecurityNumber field is required.")]
+        [StringLength(12, ErrorMessage = "Social Security Number must contain 12 integers.", MinimumLength = 12)]
+        public string SocialSecurityNumber { get; set; } = "";
 
         [Phone]
-        [Display(Name = "Phone number")]
-        public string? PhoneNumber { get; set; }
+        [StringLength(12, ErrorMessage = "Phone Number must be at most 12 characters long.")]
+        public string? PhoneNumber { get; set; } = "";
 
-        [StringLength(100)]
-        [Display(Name = "Address")]
-        public string? Address { get; set; }
-
-        [StringLength(12, MinimumLength = 5, ErrorMessage = "Nickname must be between 5 and 12 characters.")]
-        public string? Nickname { get; set; }
-
-        [Required(ErrorMessage = "Social Security Number is required.")]
-        [StringLength(12, MinimumLength = 10, ErrorMessage = "Social Security Number must be between 10 and 12 characters.")]
-        public string? SocialSecurityNumber { get; set; }
     }
 }

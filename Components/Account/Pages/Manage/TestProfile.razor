@@ -1,0 +1,97 @@
+@page "/TestProfile"
+@inject UserManager<ApplicationUser> UserManager
+@inject AuthenticationStateProvider AuthStateProvider
+@inject NavigationManager NavigationManager
+
+<PageTitle>Test Profile</PageTitle>
+
+<h1>Test Profile</h1>
+
+@if (!string.IsNullOrEmpty(Message))
+{
+    <div class="alert alert-info">@Message</div>
+}
+
+<div class="row">
+    <div class="col-md-6">
+        <form @onsubmit="UpdateProfile">
+            <div class="form-floating mb-3">
+                <input @bind="FirstName" class="form-control" placeholder="Enter First Name" />
+                <label for="first-name" class="form-label">First Name</label>
+            </div>
+
+            <button type="submit" class="w-100 btn btn-lg btn-primary">Save</button>
+        </form>
+    </div>
+</div>
+
+@code {
+    private ApplicationUser? User;
+    private string? Message;
+    private string? FirstName;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var authState = await AuthStateProvider.GetAuthenticationStateAsync();
+        var userId = authState.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+        if (userId != null)
+        {
+            User = await UserManager.FindByIdAsync(userId);
+
+            if (User != null)
+            {
+                FirstName = User.FirstName;
+            }
+        }
+    }
+
+    private async Task UpdateProfile()
+    {
+        Console.WriteLine("UpdateProfile method called.");
+
+        if (User == null)
+        {
+            Console.WriteLine("User is null.");
+            Message = "User not found.";
+            StateHasChanged();
+            return;
+        }
+
+        Console.WriteLine($"User ID: {User.Id}");
+
+        var userInDb = await UserManager.FindByIdAsync(User.Id);
+        if (userInDb == null)
+        {
+            Console.WriteLine("User in DB is null.");
+            Message = "Error: Could not retrieve user from database.";
+            StateHasChanged();
+            return;
+        }
+
+        Console.WriteLine($"User in DB: {userInDb.UserName}");
+        Console.WriteLine($"Current FirstName in DB: {userInDb.FirstName}");
+        Console.WriteLine($"New FirstName from form: {FirstName}");
+
+        userInDb.FirstName = FirstName ?? string.Empty;
+
+        Console.WriteLine($"Updated FirstName: {userInDb.FirstName}");
+
+        var updateResult = await UserManager.UpdateAsync(userInDb);
+        if (updateResult.Succeeded)
+        {
+            Console.WriteLine("User updated successfully.");
+            Message = "Profile updated successfully.";
+            StateHasChanged(); 
+            NavigationManager.NavigateTo("/TestProfile", forceLoad: true);
+        }
+        else
+        {
+            Console.WriteLine("Error updating user: " + string.Join(", ", updateResult.Errors.Select(e => e.Description)));
+            Message = "Error updating profile: " + string.Join(", ", updateResult.Errors.Select(e => e.Description));
+            StateHasChanged();
+        }
+
+        Console.WriteLine($"Message: {Message}");
+    }
+}

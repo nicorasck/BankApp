@@ -5,18 +5,8 @@
 
 <h3>Admin Page</h3>
 
-<ul>
-    @foreach (var user in users)
-    {
-        <li>@user.UserName - @user.Email</li>
-    }
-</ul>
 
-@code {
-    private List<ApplicationUser> users = new List<ApplicationUser>();
+@code{
 
-    protected override async Task OnInitializedAsync()
-    {
-        users = UserManager.Users.ToList();
-    }
 }
+

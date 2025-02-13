@@ -120,6 +120,10 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xBY2NvdW50XFBhZ2VzXE1hbmFnZVxTZXRQYXNzd29yZC5yYXpvcg==
 build_metadata.AdditionalFiles.CssScope = 
 
+[C:/Users/nicho/development/projects/OPF/Blazor/BankApp/Components/Account/Pages/Manage/TestProfile.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xBY2NvdW50XFBhZ2VzXE1hbmFnZVxUZXN0UHJvZmlsZS5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
 [C:/Users/nicho/development/projects/OPF/Blazor/BankApp/Components/Account/Pages/Manage/TwoFactorAuthentication.razor]
 build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xBY2NvdW50XFBhZ2VzXE1hbmFnZVxUd29GYWN0b3JBdXRoZW50aWNhdGlvbi5yYXpvcg==
 build_metadata.AdditionalFiles.CssScope = 

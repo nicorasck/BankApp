@@ -67,7 +67,8 @@
             </div>
             <button type="submit" class="w-100 btn btn-lg btn-primary">Save</button>
         </EditForm>
-            <!-- Edit Profile Button via NavLink-->
+            <!-- Edit Profile Button via NavLink "EditProfile"-->
+            <!--Attention! Change value from "TestProfile" to "EditProfile" for Main-page concerning Edit-->
             <NavLink href="EditProfile">
                 <button type="Edit" class="w-100 btn btn-lg btn-primary" style="margin-top: 10px; color:white ;">Edit Profile </button>
             </NavLink>
