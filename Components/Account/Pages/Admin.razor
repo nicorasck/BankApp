@@ -1,5 +1,4 @@
 @page "/Admin"
-
 @using BankApp.Data
 @using Microsoft.AspNetCore.Authorization
 @using BankApp.Models
@@ -8,7 +7,6 @@
 @rendermode InteractiveServer
 @inject UserManager<ApplicationUser> userManager
 @inject AuthenticationStateProvider authenticationStateProvider
-
 @attribute [Authorize(Roles = "Admin")]
 
 <PageTitle>Auth</PageTitle>
@@ -74,34 +72,24 @@
                                         <td>@u.Address</td>
                                         <td>@u.SocialSecurityNumber</td>
                                         <td>
-                                            @{
-                                                string joinRoles = string.Join(",", userRoles[u.Id]);
-                                                if (userRoles[u.Id].Contains("Admin"))
+                                                @foreach(var roles in userRoles[u.Id])
                                                 {
-                                                    <span class="badge bg-success">Admin</span>
+                                                   <span class="badge bg-secondary" style="margin: 2%;">@roles</span>
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" @onclick="() => RemoveRoleAsync(u.Id, roles)">
+                                                        <path fill="#ea2323" d="M7 21q-.825 0-1.412-.587T5 19V6H4V4h5V3h6v1h5v2h-1v13q0 .825-.587 1.413T17 21zm2-4h2V8H9zm4 0h2V8h-2z"/>
+                                                    </svg>
                                                 }
-                                                else
-                                                {
-                                                    <span class="badge bg-secondary">User</span>
-                                                }
-                                            }
                                         </td>
                                         <td>
-                                            @* Custom made buttons => *@
-                                            <div class="dropdown">
-                                                <button type="button" class="btn btn-primary" @onclick="() => ToggleRollDown(u.Id)">
-                                                    Edit
-                                                </button>
-                                                @if (selectedUserId == u.Id && IsRollDown)
+                                            <select class="form-select" @onchange="(e) => SetRoleAsync(u.Id, e.Value.ToString())">
+                                                <option disabled selected>Choose the role</option>
+                                                @foreach(var user in SelectedRoles)
                                                 {
-                                                    <div class="dropdown-menu show">
-                                                        <button class="dropdown-item" @onclick="() => ChangeRole(u.Id, \"Admin\")">Make Admin</button>
-                                                        <button class="dropdown-item" @onclick="() => ChangeRole(u.Id, \"User\")">Make User</button>
-                                                    </div>
+                                                    <option value="@user">@user</option>
                                                 }
-                                            </div>
+                                            </select>
                                             <button type="button" @onclick="() => DeleteUser(u.Id)"
-                                                class="btn btn-sm btn-outline-danger">Delete</button>
+                                                class="btn btn-sm btn-outline-danger" style="margin-top: 2%;">Delete</button>
                                         </td>
                                     </tr>
                                 }
@@ -117,17 +105,15 @@
 @code {
     // List to store all users
     private List<ApplicationUser> users;
-    private ApplicationUser SelectUserRole;
-    // these two are needed to get the function of roll down button (admin/user)
-    private string selectedUserId;
-    private bool IsRollDown;
+
     // Dictionary to store user roles
     private Dictionary<string, List<string>> userRoles = new Dictionary<string, List<string>>();
 
     // Initializing
+    private List<string> SelectedRoles = new() {"Admin", "User"};
     protected override async Task OnInitializedAsync()
     {
-        // Fetch all users from the UserManager
+        // Bringing users from the UserManager
         users = userManager.Users.ToList();
 
         // Bringing roles for each user
@@ -137,50 +123,64 @@
         }
     }
 
-    // Button to "Roll down"
-    private void ToggleRollDown(string userId) 
+    private async Task SetRoleAsync(string userId, string role)
     {
-        if (selectedUserId == userId)
+        // Remove all existing roles
+        var currentRoles = await userManager.FindByIdAsync(userId);
+        if(currentRoles == null) return;
+
+        var result = await userManager.AddToRoleAsync(currentRoles, role);
+
+        if(result.Succeeded)
         {
-            IsRollDown = !IsRollDown;
+            userRoles[userId].Add(role);
+            StateHasChanged();
         }
-        else
-        {
-            selectedUserId = userId;
-            IsRollDown = true;
-        }
+       
+        // Add the new role
+     
+        // Refresh the user list and roles
+        await ShowUsers();
     }
 
-    // Change the roll for user
-    private async Task ChangeRole(string userId, string role)
+    // Remove role
+        private async Task RemoveRoleAsync(string userId, string role)
     {
-        var user = await userManager.FindByIdAsync(userId);
+        // Existing roles
+        var currentRoles = await userManager.FindByIdAsync(userId);
+        if(currentRoles == null) return;
 
-        if (user != null)
+        var result = await userManager.RemoveFromRoleAsync(currentRoles, role);
+
+        if(result.Succeeded)
         {
-            // Delete existing role
-            var currentRoles = await userManager.GetRolesAsync(user);
-            await userManager.RemoveFromRolesAsync(user, currentRoles);
-            // New role
-            await userManager.AddToRoleAsync(user, role);
-            // Updating in dictionary
-            userRoles[user.Id] = (await userManager.GetRolesAsync(user)).ToList();
-            // Close roll down button after changing
-            IsRollDown = false;
+            userRoles[userId].Remove(role);
+            StateHasChanged();
         }
+     
+        // Refresh the user list and roles
+        await ShowUsers();
     }
 
-    // Delete a user
+    // Delete user
     private async Task DeleteUser(string userId)
-    {
-        // Find the user by ID
+    {   // Find the user by ID
         var user = await userManager.FindByIdAsync(userId);
         if (user != null)
-        {
-            // Delete the user
+        {    // Delete the user
             await userManager.DeleteAsync(user);
             // Refresh the user list
             users = userManager.Users.ToList();
         }
+    }
+
+    private async Task ShowUsers()
+    {
+        users = userManager.Users.ToList();
+        foreach (var user in users)
+        {
+            userRoles[user.Id] = (await userManager.GetRolesAsync(user)).ToList();
+        }
+        StateHasChanged();
     }
 }
