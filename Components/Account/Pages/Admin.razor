@@ -25,7 +25,7 @@
         <AuthorizeView Roles="User" Context="userContext">
             <!-- If the user is not an Admin, this block will render -->
             <div class="alert alert-success" role="alert">
-                Hello, <strong>@userContext.User.Identity?.Name</strong>!
+                Hello, <strong>@userContext.User.Identity?.Name</strong>! You are a User.
             </div>
         </AuthorizeView>
     </AuthorizeView>
@@ -74,10 +74,26 @@
                                         <td>
                                                 @foreach(var roles in userRoles[u.Id])
                                                 {
-                                                   <span class="badge bg-secondary" style="margin: 2%;">@roles</span>
-                                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" @onclick="() => RemoveRoleAsync(u.Id, roles)">
-                                                        <path fill="#ea2323" d="M7 21q-.825 0-1.412-.587T5 19V6H4V4h5V3h6v1h5v2h-1v13q0 .825-.587 1.413T17 21zm2-4h2V8H9zm4 0h2V8h-2z"/>
-                                                    </svg>
+                                                    string _color;
+                                                    if (roles == "Admin")
+                                                    {
+                                                        _color = "background-color: red;";
+                                                    }
+                                                    else if (roles == "User")
+                                                    {
+                                                        _color = "background-color: blue;";
+                                                    }
+                                                    else
+                                                    {
+                                                        _color = "background-color: gray;";
+                                                    }
+                                                   <span class="badge" style="@_color; margin: 2%;">@roles</span>
+                                                   @* @if (currentUserEmail == "admin@admin.se" && u.Email != "admin@admin.se" || (u.Email == currentUserEmail))
+                                                   { *@
+                                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" @onclick="() => RemoveRoleAsync(u.Id, roles)">
+                                                            <path fill="#ea2323" d="M7 21q-.825 0-1.412-.587T5 19V6H4V4h5V3h6v1h5v2h-1v13q0 .825-.587 1.413T17 21zm2-4h2V8H9zm4 0h2V8h-2z"/>
+                                                        </svg>
+                                                   @* } *@
                                                 }
                                         </td>
                                         <td>
@@ -105,6 +121,7 @@
 @code {
     // List to store all users
     private List<ApplicationUser> users;
+    //private string currentUserEmail;
 
     // Dictionary to store user roles
     private Dictionary<string, List<string>> userRoles = new Dictionary<string, List<string>>();
@@ -144,8 +161,9 @@
     }
 
     // Remove role
-        private async Task RemoveRoleAsync(string userId, string role)
+    private async Task RemoveRoleAsync(string userId, string role)
     {
+
         // Existing roles
         var currentRoles = await userManager.FindByIdAsync(userId);
         if(currentRoles == null) return;
@@ -160,18 +178,78 @@
      
         // Refresh the user list and roles
         await ShowUsers();
-    }
+
+        // Bringing the current user name by using @inject AuthenticationStateProvider
+    //    var authState = await authenticationStateProvider.GetAuthenticationStateAsync();
+    //    var currentUserEmail = authState.User.Identity?.Name;
+        
+        // Bringing the user => the one whose role is being deleted
+    //    var user = await userManager.FindByIdAsync(userId);
+    //    if (user == null)
+    //    {
+    //        return;
+    //    }
+
+        
+        // Prevent the "User" who is an Admin to delete the "Main" Admin (admin@amin.se).
+        // Only the Admin can delete other Users whose role is Admin as well.
+        
+    //    if (role == "Admin".ToLower())
+    //    {
+    //        if (currentUserEmail == "admin@admin.se" && user.Email != "admin@admin.se")
+    //        {
+    //            Console.WriteLine($"Deleting the 'Admin' role for {user.Email}.");
+    //        }
+    //        else if (user.Email == currentUserEmail)
+    //        {
+    //            Console.WriteLine($"Deleting the 'Admin' role for {user.Email}.");
+    //        }
+    //        // If a User tries to delete an Admin role for the "Main" Admin.
+    //        else
+    //        {
+    //            Console.WriteLine($"Deleting the 'Admin' role for {user.Email} is not allowed.");
+    //            return;
+    //        }
+    //    }
+    //
+    //    var result = await userManager.RemoveFromRoleAsync(user, role);
+    //
+    //    if(result.Succeeded)
+    //    {
+    //        userRoles[userId].Remove(role);
+    //        StateHasChanged();
+    //    }
+    // 
+    //    // Refresh the user list and roles
+    //    await ShowUsers();
+        }
+    
 
     // Delete user
     private async Task DeleteUser(string userId)
     {   // Find the user by ID
         var user = await userManager.FindByIdAsync(userId);
         if (user != null)
-        {    // Delete the user
-            await userManager.DeleteAsync(user);
-            // Refresh the user list
-            users = userManager.Users.ToList();
+        {    
+            var role = await userManager.GetRolesAsync(user);
+            if (role.Contains("User"))
+            {
+                // Delete the user
+                await userManager.DeleteAsync(user);
+                // Refresh the user list
+                await ShowUsers();
+            }
+            else
+            {
+                // Bringing the current user name by using @inject AuthenticationStateProvider
+                //var authState = await authenticationStateProvider.GetAuthenticationStateAsync();
+                //var currentUser = authState.User.Identity?.Name ?? "Unknown User";
+                //Console.WriteLine($"{currentUser} attempted to delete a non-User role.");
+                Console.WriteLine("Admin role cannot be deleted.");
+                await ShowUsers();
+            }
         }
+        StateHasChanged();
     }
 
     private async Task ShowUsers()
