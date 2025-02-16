@@ -1,0 +1,20 @@
+@using Microsoft.AspNetCore.Identity
+@using BankApp.Data
+
+<ul class="nav nav-pills flex-column">
+    <li class="nav-item">
+        <NavLink class="nav-link" href="Bank" Match="NavLinkMatch.All">View</NavLink>
+    </li>
+    <li class="nav-item">
+        <NavLink class="nav-link" href="Bank/CreateAccount" activeClass="active">Create Account</NavLink>
+    </li>
+    <li class="nav-item">
+        <NavLink class="nav-link" href="Bank/EditAccount" activeClass="active">Edit Account</NavLink>
+    </li>
+    <li class="nav-item"
+        ><NavLink class="nav-link" href="Bank/LockAccount" activeClass="active">Lock/Unlock Account</NavLink>
+    </li>
+    <li class="nav-item">
+        <NavLink class="nav-link" href="Bank/DeleteAccount" activeClass="active">Delete Account</NavLink>
+    </li>
+</ul>

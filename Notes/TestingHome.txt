@@ -1,4 +1,4 @@
-﻿@page "/"
+@page "/"
 @using BankApp.Components.Pages
 @using BankApp.Components.Account.Shared
 @using Microsoft.AspNetCore.Authorization
@@ -40,7 +40,7 @@
             </div>
             <div class="col-md-9">
                 <!--Here should the routing be!!!-->
-                
+                @BodyContent
                 
             </div>
         </div>
@@ -49,5 +49,32 @@
 </AuthorizeView>
 
 @code {
+    [Inject] private NavigationManager? NavigationManager { get; set; }
 
+    private RenderFragment? BodyContent { get; set; }
+
+    protected override void OnParametersSet()
+    {
+        base.OnParametersSet();
+        UpdateBodyContent();
+    }
+
+    private void UpdateBodyContent()
+    {
+        var route = NavigationManager?.Uri.Split('/').LastOrDefault();
+        BodyContent = route switch
+        {
+            "CreateAccount" => RenderCreateAccount,
+            "EditAccount" => RenderEditAccount,
+            "LockAccount" => RenderLockAccount,
+            "DeleteAccount" => RenderDeleteAccount,
+            _ => RenderViewAccount
+        };
+    }
+
+    private RenderFragment RenderCreateAccount => @<CreateAccountComponent />;
+    private RenderFragment RenderEditAccount => @<EditAccountComponent />;
+    private RenderFragment RenderLockAccount => @<LockAccountComponent />;
+    private RenderFragment RenderDeleteAccount => @<DeleteAccountComponent />;
+    private RenderFragment RenderViewAccount => @<ViewAccountComponent />;
 }
