@@ -5,47 +5,19 @@
 @using Microsoft.EntityFrameworkCore.Metadata.Internal
 
 @rendermode InteractiveServer
+
 @attribute [Authorize]
 
 <PageTitle>Home/Bank Account</PageTitle>
 
 <h3 style="margin-top: 1%; margin-bottom: 1%;">Welcome to your personalized bank application.</h3>
-
 <AuthorizeView>
     You are logged in as: [@context.User.Identity?.Name]
     <div class="Admin-page" style="margin-top: 20px; margin-bottom: 2%;">
-        <h4>Current Balance: Shit poor</h4>
+            <h4>Current Balance: Shit poor</h4>
     </div>
-    <div>
-        <hr />
-        <div class="row">
-            <div class="col-md-3">
-                <ul class="nav nav-pills flex-column">
-                    <li class="nav-item">
-                        <NavLink class="nav-link" href="Bank" Match="NavLinkMatch.All">View</NavLink>
-                    </li>
-                    <li class="nav-item">
-                        <NavLink class="nav-link" href="Bank/CreateAccount" activeClass="active">Create Account</NavLink>
-                    </li>
-                    <li class="nav-item">
-                        <NavLink class="nav-link" href="Bank/EditAccount" activeClass="active">Edit Account</NavLink>
-                    </li>
-                    <li class="nav-item">
-                        <NavLink class="nav-link" href="Bank/LockAccount" activeClass="active">Lock/Unlock Account</NavLink>
-                    </li>
-                    <li class="nav-item">
-                        <NavLink class="nav-link" href="Bank/DeleteAccount" activeClass="active">Delete Account</NavLink>
-                    </li>
-                </ul>
-            </div>
-            <div class="col-md-9">
-                <!--Here should the routing be!!!-->
-                
-                
-            </div>
-        </div>
-    </div>
-   
+    <hr />
+    <BankApp />
 </AuthorizeView>
 
 @code {

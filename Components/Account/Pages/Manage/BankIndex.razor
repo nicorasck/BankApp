@@ -1,0 +1,19 @@
+@page "/Bank"
+@using Microsoft.AspNetCore.Identity
+@using BankApp.Data
+@rendermode InteractiveServer
+
+
+@inject UserManager<ApplicationUser> UserManager
+@* Please see NaveMenu.razor concerning NavLink *@
+
+
+<PageTitle>Bank Account</PageTitle>
+
+    <BankApp.Components.Account.Shared.BankLayout />
+
+
+
+@code{
+
+}

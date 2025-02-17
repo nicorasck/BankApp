@@ -14,11 +14,12 @@
 @inject ILogger<Register> Logger
 @inject NavigationManager NavigationManager
 @inject IdentityRedirectManager RedirectManager
+@inject DbContextService DbContextService
 
 <PageTitle>Register</PageTitle>
 
 <h1>Register</h1>
-
+<h6>Did you know, as a new user in this BankApp you'll receive 100.000,00 SEK as a welcome gift?</h6>
 <div class="row">
     <div class="col-md-4">
         <StatusMessage Message="@Message" />
@@ -81,6 +82,11 @@
         }
 
         Logger.LogInformation("User created a new account with password.");
+
+        // Creating a MainAccount (Account.cs) for each new user because they are going to receive a welcome bonus for signing.
+        // Using a Service-class (Service-folder)
+        // Later a 'query check' will be implemented to not get users with the same Social Security Number (adding this when registering).
+        await DbContextService.CreateMainAccountAsync(user);
 
         var userId = await UserManager.GetUserIdAsync(user);
         var code = await UserManager.GenerateEmailConfirmationTokenAsync(user);
