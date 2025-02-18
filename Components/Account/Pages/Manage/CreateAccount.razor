@@ -1,64 +1,51 @@
 @page "/Bank/CreateAccount"
 @using BankApp.Models
-@using Microsoft.AspNetCore.Identity
-@using Microsoft.AspNetCore.Authorization
+@inject DbContextService DbContextService
 @inject UserManager<ApplicationUser> UserManager
-@layout BankLayout
-@attribute [Authorize]
+@inject NavigationManager NavigationManager
+@inject AuthenticationStateProvider AuthenticationStateProvider
 @rendermode InteractiveServer 
 
-<PageTitle>Create Account</PageTitle>
+<PageTitle>Create Bank Account</PageTitle>
+<h3>Create a new Account</h3>
 
-<h3>Create Account</h3>
-
-<!-- Main Container -->
-<div class="container-fluid mt-5">
-    <div class="row">
-        <div class="col-md-6">
-            <EditForm Model="Input" OnValidSubmit="Create" FormName="Account">
-                <!-- Account Name -->
-                <ValidationSummary class="text-danger" role="alert" />
-                <div class="fw-bold">Account name</div>
-                <div class="form-floating mb-3">
-                    <InputText @bind-Value="Input.AccountName" class="form-control" placeholder="Account name" required />
-                    <label for="account-name">Account name</label>
-                    <ValidationMessage For="() => Input.AccountName" class="text-danger" />
-                </div>
-                <!-- Button to submit account name -->
-                <button type="submit" class="w-100 btn btn-lg btn-primary">Create</button>
-            </EditForm>
-        </div>
+<EditForm Model="newAccount" OnValidSubmit="OnValidSubmit">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+    <!-- Account Name -->
+    <div class="mb-3">
+        <label>Account Name</label>
+        <InputText @bind-Value="newAccount.AccountName" class="form-control" />
     </div>
-    <AuthorizeView>
-    <div class="alert alert-success" role="alert">
-        Balance: <strong></strong>
-    </div>
-    </AuthorizeView>
-
-</div>
-
-
+    <!-- Add more to select account type, AccountType -->
+    <button type="submit" class="btn btn-primary">Create Account</button>
+</EditForm>
 
 
 @code{
-    private ApplicationUser? user;
-    private Account? account;
-    private AccountType accountType;
-    private AccountInputModel Input { get; set;} = new();
 
+    private Account newAccount = new Account();
 
-    private async Task Create()
+    private async Task OnValidSubmit()
     {
+        // bringing the current user (logged in)
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var user = await UserManager.GetUserAsync(authState.User);
 
+        if (user is null)
+        {   // Handle error
+            return;
+        }
+
+        newAccount.UserId = user.Id;
+
+        // Calling service to create account
+
+        // ATTENTION!
+        // Do not forget to modify this one => AccountType and get rid of the hardcoding value of Balance!
+        await DbContextService.CreateMainAccountAsync(user);
+        // to get back to BankIndex.razor ("/Bank")
+        NavigationManager.NavigateTo("/Bank");
     }
-    private sealed class AccountInputModel
-    {
-        [Required]
-        [StringLength(32, ErrorMessage = "Max 32 characters.")]
-        [Display(Name = "AccountName")]
-        public string AccountName { get; set; } = "";
-    }
 
-
-    
 }

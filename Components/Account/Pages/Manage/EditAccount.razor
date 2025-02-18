@@ -1,16 +1,48 @@
-@page "/Bank/EditAccount"
-@layout BankLayout
+@page "/Bank/EditAccount/{AccountId:int}"
+@inject DbContextService DbContextService
+@inject NavigationManager NavigationManager
 
 @rendermode InteractiveServer 
 
-
+<PageTitle>Edit Bank Account</PageTitle>
 <h3>Edit Account</h3>
 
+@if (account == null)
+{
+    <p>Loading...</p>
+}
+else
+{
+    <EditForm Model="account" OnValidSubmit="OnValidSubmit">
+        <DataAnnotationsValidator />
+        <ValidationSummary />
+        @* Change Account Name *@
+        <div class="mb-3">
+            <label>Account Name</label>
+            <InputText @bind-Value="account.AccountName" class="form-control" />
+        </div>
+        @* Button for save *@
+        <button type="submit" class="btn btn-primary">Save Changes</button>
+    </EditForm>
+}
 
 
 
 @code{
 
+    [Parameter]
+    public int AccountId { get; set; }
+    private Account ? account;
 
+    protected override async Task OnInitializedAsync()
+    {   // Looking for a specific Id (queries in Accounts DbSet)
+        account = await DbContextService.GetAccountByIdAsync(AccountId);
+    }
 
+    private async Task OnValidSubmit()
+    {
+        // Updating the database => account
+        await DbContextService.UpdateAccountAsync(account);
+        NavigationManager.NavigateTo("/Bank");
+    }
 }
