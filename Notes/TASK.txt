@@ -12,7 +12,7 @@ User Profile:
 - View Profile
 - Edit
 - (A- view certain fields)
-- Chaange password
+- Change password
 - Delete account (A)
 
 Account Admin (A)

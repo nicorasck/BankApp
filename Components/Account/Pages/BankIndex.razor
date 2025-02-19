@@ -1,6 +1,8 @@
 @page "/Bank"
+@layout BankLayout
 @using Microsoft.AspNetCore.Identity
 @using BankApp.Data
+@using BankApp.Components.Account.Shared
 @rendermode InteractiveServer
 
 
@@ -9,9 +11,7 @@
 
 
 <PageTitle>Bank Account</PageTitle>
-
-    <BankApp.Components.Account.Shared.BankLayout />
-
+<BankLayout />
 
 
 @code{

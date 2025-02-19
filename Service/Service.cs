@@ -18,20 +18,15 @@ public class DbContextService
      }
 
      // Method to create and save 'Main Account' for each new user
-     public async Task CreateMainAccountAsync(ApplicationUser user)
+     public async Task CreateAccountAsync(Account account)
      {
-          // Default properties
-          var mainAccount = new Account
-          {
-               AccountNumber = await GenerateAccountNumberAsync(), // Create a method to generate an Account Number!
-               AccountName = "Main Account",
-               Balance = 100000.00m,
-               AccountType = AccountType.Main, // Bringing this from the enum in AccountType (Account.cs)
-               IsActive = true,
-               UserId = user.Id
-          };
+          if (account == null)
+               throw new ArgumentNullException(nameof(account));
+
+          if (string.IsNullOrEmpty(account.AccountNumber))
+               account.AccountNumber = await GenerateAccountNumberAsync();
           // Adding the new account to the database
-          _context.Accounts.Add(mainAccount);
+          _context.Accounts.Add(account);
           // Saving changes asynchronously in the database
           await _context.SaveChangesAsync();
      }
@@ -69,6 +64,42 @@ public class DbContextService
      {
           _context.Accounts.Update(account);
           await _context.SaveChangesAsync();
+     }
+
+     // Looking for a specific account number, then deleting it
+     public async Task DeleteAccountAsync(string userId, int accountId)
+     {
+          // User and account Id
+          var account = await _context.Accounts.FirstOrDefaultAsync(a => a.Id == accountId && a.UserId == userId);
+          if (account != null)
+          {    // Updating the database
+               _context.Accounts.Remove(account);
+               await _context.SaveChangesAsync();
+          }
+     }
+
+     // To make a transaction (BankTransaction)
+     public async Task CreateTransactionAsync(BankTransaction transaction)
+     {
+          // Updating the transaction
+          _context.BankTransactions.Add(transaction);
+          await _context.SaveChangesAsync();
+     }
+
+     public async Task<Account?> GetMainAccountForUserAsync(string userId)
+     {
+          // Showing the 'Main' Account
+          return await _context.Accounts
+               .FirstOrDefaultAsync(a => a.UserId == userId && a.AccountType == AccountType.Main);
+     }
+
+     // Bringing all accounts from the database
+     public async Task<List<Account>> GetAccountsForUserAsync(string userId)
+     {
+          // Listing accounts => UserId matches the provided userId
+          return await _context.Accounts
+               .Where(a => a.UserId == userId)
+               .ToListAsync();
      }
 
 

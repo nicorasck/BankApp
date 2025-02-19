@@ -1,0 +1,74 @@
+@page "/Bank/Accounts"
+@using BankApp.Models
+@inject DbContextService DbContextService
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject UserManager<ApplicationUser> UserManager
+@layout BankLayout
+
+
+<PageTitle>Accounts Overview</PageTitle>
+
+<div class="container mt-5">
+
+    <div class="alert alert-info">
+        Hello, Here are your accounts.
+    </div>
+
+    <div class="table-responsive">
+        <table class="table table-hover">
+            <thead class="thead-light">
+                <tr>
+                    <th>Account Number</th>
+                    <th>Account Name</th>
+                    <th>Balance</th>
+                    <th>Account Type</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var a in accounts)
+                {
+                    <tr>
+                        <td>@a.AccountNumber</td>
+                        <td>@a.AccountName</td>
+                        <td>@a.Balance.ToString("C")</td>
+                        <td>@a.AccountType</td>
+                        <td>
+                            <button class="btn btn-sm btn-danger" @onclick="() => DeleteAccount(a)">Delete</button>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+@code {
+    private List<Account>? accounts;
+
+    // Executes when the component is initialized and ensures the user is authenticated
+    protected override async Task OnInitializedAsync()
+    {
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var user = await UserManager.GetUserAsync(authState.User);
+        if (user != null)
+        {
+            // Fetches accounts for the authenticated user
+            accounts = await DbContextService.GetAccountsForUserAsync(user.Id);
+        }
+    }
+
+    // Deletes account and updates
+    private async Task DeleteAccount(Account account)
+    {
+        if (account != null)
+        {
+            // Calling service to delete the account from the database
+            await DbContextService.DeleteAccountAsync(account.UserId, account.Id);
+            // Removes the account
+            accounts.Remove(account);
+            // Trigger a UI refresh
+            StateHasChanged();
+        }
+    }
+}

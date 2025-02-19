@@ -1,7 +1,5 @@
+@namespace BankApp.Components.Account.Shared
 @inherits LayoutComponentBase
-@layout BankLayout
-@rendermode InteractiveServer
-
 
 <h1>Manage your bank accounts</h1>
 
@@ -9,10 +7,29 @@
     <hr />
     <div class="row">
         <div class="col-md-3">
-        <ManageNaveMenuBank />
+            <ul class="nav nav-pills flex-column">
+                <li class="nav-item">
+                    <NavLink class="nav-link" href="/Bank/CreateAccount" Match="NavLinkMatch.All">Create Account</NavLink>
+                </li>
+                <li class="nav-item">
+                    <NavLink class="nav-link" href="/Bank/CreateTransaction">Create Transaction</NavLink>
+                </li>
+                <li class="nav-item">
+                    <NavLink class="nav-link" href="/Bank/EditAccount">Edit Account</NavLink>
+                </li>
+                <li class="nav-item">
+                    <NavLink class="nav-link" href="/Bank/Accounts">Overview Accounts</NavLink>
+                </li>
+                <li class="nav-item"
+                    ><NavLink class="nav-link" href="/Bank/LockAccount">Lock/Unlock Account</NavLink>
+                </li>
+                <li class="nav-item">
+                    <NavLink class="nav-link" href="/Bank/DeleteAccount">Delete Account</NavLink>
+                </li>
+            </ul>
         </div>
         <div class="col-md-9">
-           <!--@Body => check this up, maybe you've Create this option-->
+            @Body
         </div>
     </div>
 </div>

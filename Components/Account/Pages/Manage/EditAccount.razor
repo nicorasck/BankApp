@@ -1,8 +1,8 @@
-@page "/Bank/EditAccount/{AccountId:int}"
+@page "/Bank/EditAccount"
 @inject DbContextService DbContextService
 @inject NavigationManager NavigationManager
+@layout BankLayout
 
-@rendermode InteractiveServer 
 
 <PageTitle>Edit Bank Account</PageTitle>
 <h3>Edit Account</h3>
@@ -43,6 +43,6 @@ else
     {
         // Updating the database => account
         await DbContextService.UpdateAccountAsync(account);
-        NavigationManager.NavigateTo("/Bank");
+        NavigationManager.NavigateTo("/");
     }
 }

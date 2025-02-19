@@ -86,7 +86,15 @@
         // Creating a MainAccount (Account.cs) for each new user because they are going to receive a welcome bonus for signing.
         // Using a Service-class (Service-folder)
         // Later a 'query check' will be implemented to not get users with the same Social Security Number (adding this when registering).
-        await DbContextService.CreateMainAccountAsync(user);
+        var newAccount = new Account
+        {
+            UserId = user.Id,
+            AccountName = "Main Account",
+            Balance = 100000.00m, // Default balance for new main account
+            AccountType = AccountType.Main,
+            IsActive = true
+        };
+        await DbContextService.CreateAccountAsync(newAccount);
 
         var userId = await UserManager.GetUserIdAsync(user);
         var code = await UserManager.GenerateEmailConfirmationTokenAsync(user);
