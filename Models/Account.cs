@@ -18,6 +18,7 @@ public class Account
     public  List<BankTransaction> BankTransactions { get; set; } = new List<BankTransaction>();
     // public List<BankTransaction> IncomingTransactions { get; set; } = new List<BankTransaction>(); // Navigation property
     public bool IsActive { get; set; }
+    public bool DisplayTransactions { get; set; } // this is to display transaction history with a toggle-function!
     public string? CardNumber { get; set; }
     public string UserId { get; set; } = string.Empty;
     public  ApplicationUser? User { get; set; }

@@ -86,6 +86,16 @@ public class DbContextService
           await _context.SaveChangesAsync();
      }
 
+     // To look for transactions for each belonging account for a user
+     public async Task<List<BankTransaction>> GetTransactionsForAccountAsync(int id, string accountNumber)
+     {
+          // listing all transactions for each account
+          return await _context.BankTransactions
+               .Include(b => b.FromAccount)
+               .Where(b => b.FromAccountId == id || b.ToAccount == accountNumber) // => accountNumber in Account.cs
+               .ToListAsync();
+     }
+
      public async Task<Account?> GetMainAccountForUserAsync(string userId)
      {
           // Showing the 'Main' Account
