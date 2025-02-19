@@ -17,7 +17,7 @@ public class DbContextService
           _context = context;
      }
 
-     // Method to create and save 'Main Account' for each new user
+     // Method to create and save new account for each new user
      public async Task CreateAccountAsync(Account account)
      {
           if (account == null)
@@ -66,7 +66,7 @@ public class DbContextService
           await _context.SaveChangesAsync();
      }
 
-     // Looking for a specific account number, then deleting it
+     // Looking for a specific account and user Id, then deleting it
      public async Task DeleteAccountAsync(string userId, int accountId)
      {
           // User and account Id

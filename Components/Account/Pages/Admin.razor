@@ -120,7 +120,7 @@
 
 @code {
     // List to store all users
-    private List<ApplicationUser> users;
+    private List<ApplicationUser>? users;
     //private string currentUserEmail;
 
     // Dictionary to store user roles
@@ -179,50 +179,7 @@
         // Refresh the user list and roles
         await ShowUsers();
 
-        // Bringing the current user name by using @inject AuthenticationStateProvider
-    //    var authState = await authenticationStateProvider.GetAuthenticationStateAsync();
-    //    var currentUserEmail = authState.User.Identity?.Name;
-        
-        // Bringing the user => the one whose role is being deleted
-    //    var user = await userManager.FindByIdAsync(userId);
-    //    if (user == null)
-    //    {
-    //        return;
-    //    }
-
-        
-        // Prevent the "User" who is an Admin to delete the "Main" Admin (admin@amin.se).
-        // Only the Admin can delete other Users whose role is Admin as well.
-        
-    //    if (role == "Admin".ToLower())
-    //    {
-    //        if (currentUserEmail == "admin@admin.se" && user.Email != "admin@admin.se")
-    //        {
-    //            Console.WriteLine($"Deleting the 'Admin' role for {user.Email}.");
-    //        }
-    //        else if (user.Email == currentUserEmail)
-    //        {
-    //            Console.WriteLine($"Deleting the 'Admin' role for {user.Email}.");
-    //        }
-    //        // If a User tries to delete an Admin role for the "Main" Admin.
-    //        else
-    //        {
-    //            Console.WriteLine($"Deleting the 'Admin' role for {user.Email} is not allowed.");
-    //            return;
-    //        }
-    //    }
-    
-    //    var result = await userManager.RemoveFromRoleAsync(user, role);
-    
-    //    if(result.Succeeded)
-    //    {
-    //        userRoles[userId].Remove(role);
-    //        StateHasChanged();
-    //    }
-    
-    //    // Refresh the user list and roles
-    //    await ShowUsers();
-        }
+    }
     
 
     // Delete user

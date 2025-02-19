@@ -5,6 +5,8 @@
 
 
 <PageTitle>Edit Bank Account</PageTitle>
+
+<div class="container">
 <h3>Edit Account</h3>
 
 @if (account == null)
@@ -25,6 +27,7 @@ else
         <button type="submit" class="btn btn-primary">Save Changes</button>
     </EditForm>
 }
+</div>
 
 
 
@@ -32,7 +35,7 @@ else
 
     [Parameter]
     public int AccountId { get; set; }
-    private Account ? account;
+    private Account? account;
 
     protected override async Task OnInitializedAsync()
     {   // Looking for a specific Id (queries in Accounts DbSet)

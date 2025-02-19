@@ -1,14 +1,17 @@
 @page "/Bank/Accounts"
 @using BankApp.Models
+@using BankApp.Data
 @inject DbContextService DbContextService
 @inject AuthenticationStateProvider AuthenticationStateProvider
 @inject UserManager<ApplicationUser> UserManager
+@inject NavigationManager NavigationManager
 @layout BankLayout
+@rendermode InteractiveServer
 
 
 <PageTitle>Accounts Overview</PageTitle>
 
-<div class="container mt-5">
+<div class="container">
 
     <div class="alert alert-info">
         Hello, Here are your accounts.
@@ -23,6 +26,7 @@
                     <th>Balance</th>
                     <th>Account Type</th>
                     <th>Actions</th>
+                    <th>Transaction History</th>
                 </tr>
             </thead>
             <tbody>
@@ -36,6 +40,13 @@
                         <td>
                             <button class="btn btn-sm btn-danger" @onclick="() => DeleteAccount(a)">Delete</button>
                         </td>
+                        <td>
+                            <button class="btn btn-sm btn-info" @onclick="() => ToggleHistory(a)">History</button>
+                            @if()
+                            {
+                                
+                            }
+                        </td>
                     </tr>
                 }
             </tbody>
@@ -45,30 +56,37 @@
 
 @code {
     private List<Account>? accounts;
-
-    // Executes when the component is initialized and ensures the user is authenticated
     protected override async Task OnInitializedAsync()
     {
         var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
         var user = await UserManager.GetUserAsync(authState.User);
         if (user != null)
         {
-            // Fetches accounts for the authenticated user
+            // Bringing accounts for the authenticated user
             accounts = await DbContextService.GetAccountsForUserAsync(user.Id);
         }
     }
 
     // Deletes account and updates
-    private async Task DeleteAccount(Account account)
+    private async Task DeleteAccount(Account _account)
     {
-        if (account != null)
+        try
         {
-            // Calling service to delete the account from the database
-            await DbContextService.DeleteAccountAsync(account.UserId, account.Id);
-            // Removes the account
-            accounts.Remove(account);
-            // Trigger a UI refresh
-            StateHasChanged();
+            if (_account != null)
+            {
+                // Calling service to delete the account from the database
+                await DbContextService.DeleteAccountAsync(_account.UserId, _account.Id);
+                accounts?.Remove(_account);
+                // Trigger a UI refresh
+                StateHasChanged();
+                // to get back to BankIndex.razor ("/Bank")
+                NavigationManager.NavigateTo("//Bank/");
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Something went wrong: {ex.Message}");
         }
     }
 }
+

@@ -20,6 +20,6 @@ public class Account
     public bool IsActive { get; set; }
     public string? CardNumber { get; set; }
     public string UserId { get; set; } = string.Empty;
-    public  ApplicationUser User { get; set; }
+    public  ApplicationUser? User { get; set; }
 }
 
