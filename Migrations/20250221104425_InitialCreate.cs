@@ -33,7 +33,7 @@ namespace BankApp.Migrations
                     FirstName = table.Column<string>(type: "TEXT", nullable: true),
                     LastName = table.Column<string>(type: "TEXT", nullable: true),
                     Nickname = table.Column<string>(type: "TEXT", nullable: true),
-                    SocialSecurityNumber = table.Column<string>(type: "TEXT", nullable: false),
+                    SocialSecurityNumber = table.Column<string>(type: "TEXT", nullable: true),
                     Address = table.Column<string>(type: "TEXT", nullable: true),
                     UserName = table.Column<string>(type: "TEXT", maxLength: 256, nullable: true),
                     NormalizedUserName = table.Column<string>(type: "TEXT", maxLength: 256, nullable: true),
@@ -82,11 +82,12 @@ namespace BankApp.Migrations
                 {
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
-                    AccountNumber = table.Column<string>(type: "TEXT", nullable: false),
+                    AccountNumber = table.Column<string>(type: "TEXT", nullable: true),
                     AccountName = table.Column<string>(type: "TEXT", nullable: true),
                     Balance = table.Column<decimal>(type: "TEXT", nullable: false),
                     AccountType = table.Column<int>(type: "INTEGER", nullable: false),
                     IsActive = table.Column<bool>(type: "INTEGER", nullable: false),
+                    DisplayTransactions = table.Column<bool>(type: "INTEGER", nullable: false),
                     CardNumber = table.Column<string>(type: "TEXT", nullable: true),
                     UserId = table.Column<string>(type: "TEXT", nullable: false)
                 },

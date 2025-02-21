@@ -1,6 +1,7 @@
 using BankApp.Data;
 using BankApp.Models;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity;
 
 /// <summary>
 /// Using this file as a Service => Dependency (injection)
@@ -18,10 +19,15 @@ public class DbContextService
      }
 
      // Method to create and save new account for each new user
-     public async Task CreateAccountAsync(Account account)
+     public async Task<Account> CreateAccountAsync(Account account, ApplicationUser user)
      {
+          ///account.UserId = user.Id;
+
           if (account == null)
                throw new ArgumentNullException(nameof(account));
+
+          // // Debugging
+          // //Console.WriteLine($"The new account {account.AccountName} is now created.");
 
           if (string.IsNullOrEmpty(account.AccountNumber))
                account.AccountNumber = await GenerateAccountNumberAsync();
@@ -29,6 +35,7 @@ public class DbContextService
           _context.Accounts.Add(account);
           // Saving changes asynchronously in the database
           await _context.SaveChangesAsync();
+          return account;
      }
 
      // Method for GenerateAccountNumberAsync with unique number as well (format "xxxx-xxx xxx xx")
@@ -42,7 +49,7 @@ public class DbContextService
                string combination1 = new Random().Next(100, 999).ToString();    // first block with three digits
                string combination2 = new Random().Next(100, 999).ToString();   // second block with three digits
                string combination3 = new Random().Next(10, 99).ToString();     // third block with two digits
-                                                                               // the whole number combined => format "xxxx-xxx xxx xx"
+               // the whole number combined => format "xxxx-xxx xxx xx"
                accountNumber = $"{ClearingNumber}-{combination1} {combination2} {combination3}";
                // error handling, if the number already exists in the database
                exists = await _context.Accounts.AnyAsync(a => a.AccountNumber == accountNumber);

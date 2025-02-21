@@ -1,0 +1,89 @@
+@page "/Bank/CreateAccount"
+@using BankApp.Models
+@inject UserManager<ApplicationUser> UserManager
+@inject NavigationManager NavigationManager
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject ApplicationDbContext context
+@layout BankLayout
+
+<PageTitle>Create Bank Account</PageTitle>
+
+<div class="container">
+    <h3>Create a New Account</h3>
+    <EditForm Model="newAccount" OnValidSubmit="SaveAccount" FormName="Create">
+        <DataAnnotationsValidator />
+        <ValidationSummary />
+
+        <!-- Account Name -->
+        <div class="form-group">
+            <label for="accountName">Account Name</label>
+            <InputText id="accountName" @bind-Value="newAccount.AccountName" class="form-control" />
+            <ValidationMessage For="() => newAccount.AccountName" class="text-danger" />
+        </div>
+
+        <!-- Account Type -->
+        <div class="form-group">
+            <label for="accountType">Account Type</label>
+            <select id="accountType" @bind="newAccount.AccountType" class="form-control">
+                @foreach (var type in Enum.GetValues(typeof(AccountType)).Cast<AccountType>())
+                {
+                    <option value="@type">@type.ToString()</option>
+                }
+            </select>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Create Account</button>
+    </EditForm>
+</div>
+
+@code {
+    private ApplicationUser User;
+    private Account newAccount = new Account();
+
+    protected override async Task OnInitializedAsync()
+    {
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var userClaims = authState.User;
+
+        if (userClaims.Identity.IsAuthenticated)
+        {
+            User = await UserManager.GetUserAsync(userClaims);
+        }
+    }
+
+    private async Task SaveAccount()
+    {
+        if (User == null)
+        {
+            Console.WriteLine("User is not authenticated.");
+            return;
+        }
+
+        if (string.IsNullOrWhiteSpace(newAccount.AccountName))
+        {
+            Console.WriteLine("Account name is required.");
+            return;
+        }
+
+        newAccount.UserId = User.Id;
+        newAccount.AccountNumber = GenerateAccountNumber();
+
+        context.Add(newAccount);
+        await context.SaveChangesAsync();
+    }
+
+    private string GenerateAccountNumber()
+    {
+        Random random = new Random();
+        var accountNumber = "9785-3";
+        for (int i = 0; i < 10; i++)
+        {
+            if (i > 0 && i % 4 == 0)
+            {
+                accountNumber += " ";
+            }
+            accountNumber +=  random.Next(0, 10).ToString();
+        }
+        return accountNumber.ToString();
+    }
+}

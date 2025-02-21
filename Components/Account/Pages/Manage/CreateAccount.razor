@@ -21,16 +21,11 @@
         <div class="mb-3">
             <label for="accountType">Account Type</label>
             <InputSelect id="accountType" @bind-Value="newAccount.AccountType" class="form-control">
-                @foreach (var type in Enum.GetValues<AccountType>())
+                @foreach (var type in Enum.GetValues(typeof(AccountType)).Cast<AccountType>())
                 {
                     <option value="@type">@type</option>
                 }
             </InputSelect>
-        </div>
-        <!-- Balance -->
-        <div class="mb-3">
-            <label for="balance">Initial Balance</label>
-            <InputNumber id="balance" @bind-Value="newAccount.Balance" class="form-control" />
         </div>
         <button type="submit" class="btn btn-primary">Create Account</button>
     </EditForm>
@@ -46,20 +41,24 @@
         var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
         var user = await UserManager.GetUserAsync(authState.User);
 
-        if (user is null)
-        { // Handle error
+        if (user == null)
+        {
+            Console.WriteLine("User is not authenticated.");
+            return;
+        }
+
+        if (string.IsNullOrWhiteSpace(newAccount.AccountName))
+        {
+            Console.WriteLine("Account name is required.");
             return;
         }
 
         newAccount.UserId = user.Id;
 
         // Calling service to create account
-
-        // ATTENTION!
-        // Do not forget to modify this one => AccountType and get rid of the hardcoding value of Balance!
-        await DbContextService.CreateAccountAsync(newAccount);
+        await DbContextService.CreateAccountAsync(newAccount, user);
         // to get back to BankIndex.razor ("/Bank")
-        NavigationManager.NavigateTo("/Bank");
+        NavigationManager.NavigateTo("/Bank/CreateAccount");
     }
 
 }

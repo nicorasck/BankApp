@@ -10,8 +10,8 @@ public class ApplicationUser : IdentityUser
     public string? FirstName { get; set; }
     public string? LastName { get; set; }
     public string? Nickname { get; set; }
-    public string SocialSecurityNumber { get; set; } = string.Empty;
-    public List<Account> Accounts { get; set; } = new List<Account>(); // avoiding null references
+    public string? SocialSecurityNumber { get; set; }
+    public List<Account> Accounts { get; set; }
     public string? Address { get; set; }
 }
 

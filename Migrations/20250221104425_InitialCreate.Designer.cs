@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BankApp.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250219222855_Added bool DisplayTransaction in Account.cs")]
-    partial class AddedboolDisplayTransactioninAccountcs
+    [Migration("20250221104425_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -78,7 +78,6 @@ namespace BankApp.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("SocialSecurityNumber")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<bool>("TwoFactorEnabled")
@@ -110,7 +109,6 @@ namespace BankApp.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("AccountNumber")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<int>("AccountType")

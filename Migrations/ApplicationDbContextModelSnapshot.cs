@@ -75,7 +75,6 @@ namespace BankApp.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("SocialSecurityNumber")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<bool>("TwoFactorEnabled")
@@ -104,10 +103,10 @@ namespace BankApp.Migrations
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("AccountName")
+                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<string>("AccountNumber")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<int>("AccountType")
