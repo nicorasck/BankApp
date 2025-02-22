@@ -2,6 +2,8 @@ using System.Transactions;
 using BankApp.Models;
 using Microsoft.AspNetCore.Identity;
 using BankApp.Data;
+using System.ComponentModel.DataAnnotations;
+
 
 // Add profile data for application users by adding properties to the ApplicationUser class
 

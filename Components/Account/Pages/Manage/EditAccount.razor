@@ -1,6 +1,8 @@
 @page "/Bank/EditAccount"
 @inject DbContextService DbContextService
+@inject UserManager<ApplicationUser> UserManager
 @inject NavigationManager NavigationManager
+@inject AuthenticationStateProvider AuthenticationStateProvider
 @layout BankLayout
 
 
@@ -46,6 +48,6 @@ else
     {
         // Updating the database => account
         await DbContextService.UpdateAccountAsync(account);
-        NavigationManager.NavigateTo("/");
+        NavigationManager.NavigateTo("/Bank");
     }
 }

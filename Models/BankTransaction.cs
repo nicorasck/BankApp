@@ -1,5 +1,6 @@
 using System.Transactions;
 using BankApp.Models;
+using System.ComponentModel.DataAnnotations;
 
 namespace BankApp.Models
 {
