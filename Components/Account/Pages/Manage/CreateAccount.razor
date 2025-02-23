@@ -1,43 +1,60 @@
 @page "/Bank/CreateAccount"
-@using BankApp.Models
 @using System.ComponentModel.DataAnnotations
-@inject DbContextService DbContextService
-@inject UserManager<ApplicationUser> UserManager
+@using System.Text
+@using System.Text.Encodings.Web
+@using Microsoft.AspNetCore.Identity
+@using Microsoft.AspNetCore.WebUtilities
+@using BankApp.Data
+@using BankApp.Models
+@using Microsoft.EntityFrameworkCore
+
 @inject NavigationManager NavigationManager
+@inject DbContextService DbContextService
 @inject AuthenticationStateProvider AuthenticationStateProvider
+@rendermode InteractiveServer
+
+
+@inject UserManager<ApplicationUser> UserManager
 @layout BankLayout
 
 <PageTitle>Create Bank Account</PageTitle>
 <div class="container">
 <h3>Create a new Account</h3>
-    <EditForm Model="newAccount" OnValidSubmit="OnValidSubmit" FormName="CreateAccount">
+    <EditForm Model="newAccount" OnValidSubmit="CreateNewAccount" FormName="CreateAccount">
         <DataAnnotationsValidator />
         <ValidationSummary />
         <!-- Account Name -->
         <div class="mb-3">
             <label>Account Name</label>
-            <InputText @bind-Value="newAccount.AccountName" class="form-control" />
+            <input id="accountName" @bind="newAccount.AccountName" class="form-control" />
             <ValidationMessage For="@(() => newAccount.AccountName)" />
         </div>
         <!-- Account Type -->
         <div class="mb-3">
             <label for="accountType">Account Type</label>
-            <InputSelect id="accountType" @bind-Value="newAccount.AccountType" class="form-control">
+            <select id="accountType" @bind="newAccount.AccountType" class="form-control">
                 <option value="">Select an account type</option>
                 @foreach (var type in Enum.GetValues(typeof(AccountType)).Cast<AccountType>())
                 {
                     <option value="@type">@type</option>
                 }
-            </InputSelect>
+            </select>
             <ValidationMessage For="@(() => newAccount.AccountType)" />
         </div>
+        <div class="form-check mb-3">
+            <InputCheckbox class="form-check-input" @bind-Value="newAccount.IsActive" />
+            <label class="form-check-label">Active Account</label>
+        </div>
+        <!-- Button to save-->
         <button type="submit" class="btn btn-primary">Create Account</button>
     </EditForm>
 </div>
 
 @code {
 
-   private Account newAccount = new Account();
+    private Account newAccount = new Account();
+    private List<Account> accounts = new();
+
 
    // Debugging
     //private Account newAccount = new Account { AccountName = "TEST", AccountType = AccountType.Portfolio };
@@ -46,10 +63,10 @@
     // Otherwise it will be re-rendered and the input will be lost. (does not work anyway atm 2025-02-22)
     protected override void OnInitialized()
     {
-        newAccount = new Account();
+        newAccount = new Account();   
     }
 
-    private async Task OnValidSubmit()
+    private async Task CreateNewAccount()
     {
         // Debugging
         //Console.WriteLine($"Account Name: {newAccount.AccountName}, Account Type: {newAccount.AccountType}");
@@ -70,22 +87,24 @@
             return;
         }
 
-
         try
         {
-            newAccount.UserId = user.Id;
+            // Calling service to create account
             await DbContextService.CreateAccountAsync(newAccount, user);
-            // to get back to BankIndex.razor ("/Bank")
-            NavigationManager.NavigateTo("/Bank");
+
+            accounts = await DbContextService.GetAccountsByUserAsync(user);
+            // directing to "/Bank/Accounts" to show the new Account.
+            NavigationManager.NavigateTo("/Bank/Accounts");
         }
         catch (Exception ex)
         {
             Console.WriteLine($"Error creating account: {ex.Message}");
             return;
         }
-
-        // Calling service to create account
-        //await DbContextService.CreateAccountAsync(newAccount, user);
+            finally
+        {
+            //newAccount = new Account();
+            newAccount = new Account { IsActive = true }; // Maintain the initial active state default if resetting
+        }
     }
-
 }

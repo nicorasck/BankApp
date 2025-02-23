@@ -2,7 +2,6 @@ using BankApp.Data;
 using BankApp.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
-
 /// <summary>
 /// Using this file as a Service => Dependency (injection)
 /// It will contain several of different classes or/and functions!
@@ -28,6 +27,8 @@ public class DbContextService
 
           // // Debugging
           // //Console.WriteLine($"The new account {account.AccountName} is now created.");
+
+          account.UserId = user.Id; // Ensure the User Id will be assigned 
 
           if (string.IsNullOrEmpty(account.AccountNumber))
                account.AccountNumber = await GenerateAccountNumberAsync();
@@ -111,14 +112,22 @@ public class DbContextService
      }
 
      // Bringing all accounts from the database
-     public async Task<List<Account>> GetAccountsForUserAsync(string userId)
-     {
-          // Listing accounts => UserId matches the provided userId
-          return await _context.Accounts
-               .Where(a => a.UserId == userId)
-               .ToListAsync();
-     }
+    public async Task<List<Account>> GetAccountsByUserAsync(ApplicationUser user)
+    {
+        return await _context.Accounts.Where(a => a.User.Id == user.Id).ToListAsync();
+    }
+
+     // tested function of Jojje (used it in CreateAccount)
+    public async Task AddAccountAsync(ApplicationUser user, Account account){
+
+        account.UserId = user.Id;
+        account.AccountNumber = await GenerateAccountNumberAsync();
+        // account.AccountType = SelectedAccountType;
+        // account.IsActive = true;
 
 
+        _context.Accounts.Add(account);
+        await _context.SaveChangesAsync();
+    }
 
 }

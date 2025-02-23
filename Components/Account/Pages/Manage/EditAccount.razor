@@ -1,4 +1,4 @@
-@page "/Bank/EditAccount"
+@page "/Bank/EditAccount/{_accountId:int}"
 @inject DbContextService DbContextService
 @inject UserManager<ApplicationUser> UserManager
 @inject NavigationManager NavigationManager
@@ -15,39 +15,53 @@
 {
     <p>Loading...</p>
 }
+else if (!IsFound)
+{
+    <p>Account not found.</p>
+}
 else
 {
-    <EditForm Model="account" OnValidSubmit="OnValidSubmit">
-        <DataAnnotationsValidator />
-        <ValidationSummary />
-        @* Change Account Name *@
+    <EditForm Model="account" OnValidSubmit="UpdateAccount">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
         <div class="mb-3">
-            <label>Account Name</label>
-            <InputText @bind-Value="account.AccountName" class="form-control" />
+            <label for="accountName">Account Name</label>
+            <input id="accountName" @bind="account.AccountName" class="form-control" />
         </div>
-        @* Button for save *@
-        <button type="submit" class="btn btn-primary">Save Changes</button>
+
+        <div class="form-group">
+            <button type="submit" class="btn btn-primary">Update changes</button>
+            <button type="button" class="btn btn-secondary" @onclick="CancelEdit">Cancel</button>
+        </div>
     </EditForm>
 }
 </div>
 
 
-
 @code{
 
     [Parameter]
-    public int AccountId { get; set; }
+    public int _accountId { get; set; }
     private Account? account;
+    private bool IsFound = true;
 
     protected override async Task OnInitializedAsync()
     {   // Looking for a specific Id (queries in Accounts DbSet)
-        account = await DbContextService.GetAccountByIdAsync(AccountId);
+        account = await DbContextService.GetAccountByIdAsync(_accountId);
+        if (account == null)
+        {
+            IsFound = false;
+        }
     }
 
-    private async Task OnValidSubmit()
+    private async Task UpdateAccount()
     {
         // Updating the database => account
         await DbContextService.UpdateAccountAsync(account);
-        NavigationManager.NavigateTo("/Bank");
+        NavigationManager.NavigateTo("/Bank/Accounts");
+    }
+    private void CancelEdit()
+    {
+        NavigationManager.NavigateTo("/Bank/Accounts");
     }
 }
