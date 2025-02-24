@@ -1,9 +1,15 @@
 @page "/Bank/EditAccount/{_accountId:int}"
+
+@using Microsoft.AspNetCore.Identity
+@using Microsoft.AspNetCore.WebUtilities
+
+
 @inject DbContextService DbContextService
 @inject UserManager<ApplicationUser> UserManager
 @inject NavigationManager NavigationManager
 @inject AuthenticationStateProvider AuthenticationStateProvider
 @layout BankLayout
+@rendermode InteractiveServer
 
 
 <PageTitle>Edit Bank Account</PageTitle>
@@ -21,7 +27,7 @@ else if (!IsFound)
 }
 else
 {
-    <EditForm Model="account" OnValidSubmit="UpdateAccount">
+    <EditForm Model="account" OnValidSubmit="UpdateAccount" FormName="EditAccount">
     <DataAnnotationsValidator />
     <ValidationSummary />
         <div class="mb-3">
@@ -53,7 +59,6 @@ else
             IsFound = false;
         }
     }
-
     private async Task UpdateAccount()
     {
         // Updating the database => account
