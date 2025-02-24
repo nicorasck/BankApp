@@ -43,9 +43,9 @@ else
             // Toggle the account's active status
             account.IsActive = !account.IsActive;
             await DbContextService.UpdateAccountAsync(account);
-            NavigationManager.NavigateTo("/Bank");
+            NavigationManager.NavigateTo("/Bank/Accounts");
         }
     }
 
-    private void Cancel() => NavigationManager.NavigateTo("/Bank");
+    private void Cancel() => NavigationManager.NavigateTo("/Bank/Accounts");
 }

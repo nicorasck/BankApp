@@ -8,7 +8,6 @@ using Microsoft.AspNetCore.Identity;
 /// </summary>
 public class DbContextService
 {   // private field to store instances in the database
-
      private const string ClearingNumber = "1337"; // constant => Clearing Number for this BankApp
      private readonly ApplicationDbContext _context;
      // Constructor => injects ApplicationDbContext 
@@ -117,7 +116,7 @@ public class DbContextService
         return await _context.Accounts.Where(a => a.User.Id == user.Id).ToListAsync();
     }
 
-     // tested function of Jojje (used it in CreateAccount)
+     // tested function of Jojje's (used it in CreateAccount)
     public async Task AddAccountAsync(ApplicationUser user, Account account){
 
         account.UserId = user.Id;
