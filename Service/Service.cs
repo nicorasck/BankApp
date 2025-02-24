@@ -86,11 +86,21 @@ public class DbContextService
      }
 
      // To make a transaction (BankTransaction)
-     public async Task CreateTransactionAsync(BankTransaction transaction)
-     {
-          // Updating the transaction
-          _context.BankTransactions.Add(transaction);
-          await _context.SaveChangesAsync();
+     public async Task CreateTransactionAsync(BankTransaction newTransaction)
+     {    // this is a transaction handling within Entity Framework
+          using (var transaction = _context.Database.BeginTransaction())
+          try
+          {    // Saving the transaction in the database
+               _context.BankTransactions.Add(newTransaction);
+               await _context.SaveChangesAsync();
+               //Commit the transaction if all operations were successful
+               await transaction.CommitAsync();
+          }
+          catch (Exception ex)
+          {    // Rollback changes if failing (Aladin taught us that in our first course for Databases)
+               await transaction.RollbackAsync();
+               Console.WriteLine($"Something went wrong: {ex.Message}", ex);
+          }
      }
 
      // To look for transactions for each belonging account for a user
@@ -99,9 +109,11 @@ public class DbContextService
           // listing all transactions for each account
           return await _context.BankTransactions
                .Include(b => b.FromAccount)
-               .Where(b => b.FromAccountId == id || b.ToAccount == accountNumber) // => accountNumber in Account.cs
+               .Where(b => b.FromAccountId == id || (b.FromAccount != null && b.FromAccount.AccountNumber == accountNumber)) // => accountNumber in Account.cs
                .ToListAsync();
      }
+
+
 
      public async Task<Account?> GetMainAccountForUserAsync(string userId)
      {

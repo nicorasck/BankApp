@@ -1,4 +1,14 @@
 @page "/Bank/CreateTransaction"
+
+@using System.ComponentModel.DataAnnotations
+@using System.Text
+@using System.Text.Encodings.Web
+@using Microsoft.AspNetCore.Identity
+@using Microsoft.AspNetCore.WebUtilities
+@using BankApp.Data
+@using BankApp.Models
+@using Microsoft.EntityFrameworkCore
+
 @inject DbContextService DbContextService
 @inject UserManager<ApplicationUser> UserManager
 @inject NavigationManager NavigationManager
@@ -10,12 +20,30 @@
 
 <div class="container">
 <h3>Transfer Funds</h3>
-    <EditForm Model="transaction" OnValidSubmit="OnValidSubmit" method="post" FormName="CreateTransaction">
+    <EditForm Model="transaction" OnValidSubmit="CreateNewTransaction" method="post" FormName="CreateTransaction">
         <DataAnnotationsValidator />
         <ValidationSummary />
         <div class="mb-3">
-            <label>Recipient Account Number</label>
-            <InputText @bind-Value="transaction.ToAccount" class="form-control" />
+            <label>From Account</label>
+            <select @bind="transaction.FromAccountId" class="form-control">
+                <option>Select an account</option>
+                @foreach (var account in accounts)
+                {
+                    <option value="@account.Id">@account.AccountName</option>
+                }
+            </select>
+            <ValidationMessage For="@(() => transaction.FromAccountId)" />
+        </div>
+        <div class="mb-3">
+            <label>To Account</label>
+            <select @bind="transaction.ToAccountId" class="form-control">
+                <option>Select an account</option>
+                @foreach (var account in accounts)
+                {
+                    <option value="@account.Id">@account.AccountName</option>
+                }
+            </select>
+            <ValidationMessage For="@(() => transaction.ToAccountId)" />
         </div>
         <div class="mb-3">
             <label>Amount</label>
@@ -23,12 +51,13 @@
         </div>
         <div class="mb-3">
             <label>Currency</label>
-            <InputSelect @bind-Value="transaction.Currency" class="form-control">
+            <select @bind="transaction.Currency" class="form-control">
                 @foreach (Currency c in Enum.GetValues(typeof(Currency)))
                 {
                     <option value="@c">@c</option>
                 }
-            </InputSelect>
+            </select>
+            <ValidationMessage For="@(() => transaction.Currency)" />
         </div>
         <!-- Message -->
         <div class="mb-3">
@@ -41,28 +70,47 @@
 
 @code {
     private BankTransaction transaction = new BankTransaction();
+    private List<Account> accounts = new List<Account>();
 
-    private async Task OnValidSubmit()
+    // then it is initialized this will be called.
+    protected override async Task OnInitializedAsync()
     {
-        // Bringing the users accounts and assign the FromAccountId
+        await LoadingAccounts();
+    }
+    // Loading accounts for the user
+    private async Task LoadingAccounts()
+    {
         var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
         var user = await UserManager.GetUserAsync(authState.User);
-        if (user is null)
-        {
-            return;
+        if (user != null)
+        {   // Bringing the accounts IF user is not Null => callin method from Service
+            accounts = await DbContextService.GetAccountsByUserAsync(user);
         }
-        // Add more code => to choose which account and so on
-        // This code will look after first account of the user (not optional)
-        var userAccount = user.Accounts.FirstOrDefault();
-        if (userAccount == null)
-        {
-            // Error handling
-            return;
+    }
+    private async Task CreateNewTransaction()
+    {
+        if (!accounts.Any())
+        {   // to ensure the accounts are loaded
+            await LoadingAccounts();
+            if (!accounts.Any())
+            {
+                Console.WriteLine("No accounts loaded.");
+                return; // If still no accounts, exit the method
+            }
         }
-        transaction.FromAccountId = userAccount.Id;
-        transaction.TransactionDate = DateTime.Now;
-        // Calling Service to make a transaction
-        await DbContextService.CreateTransactionAsync(transaction);
-        NavigationManager.NavigateTo("/Bank");
+        
+        try
+        {
+            transaction.TransactionDate = DateTime.Now;
+            // Calling Service to make a transaction
+            await DbContextService.CreateTransactionAsync(transaction);
+            Console.WriteLine("Transaction created successfully.");
+            NavigationManager.NavigateTo("/Bank/Accounts");
+
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Something went wrong: {ex.Message}", ex);
+        }
     }
 }
