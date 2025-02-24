@@ -37,7 +37,7 @@
                         <td>@a.AccountName</td>
                         <td>@a.Balance.ToString("C")</td>
                         <td>@a.AccountType</td>
-                        <td>@(account.IsActive ? "Active" : "Inactive")</td>
+                        <td>@(a.IsActive ? "Active" : "Inactive")</td>
                         <td>
                             <button class="btn btn-sm btn-danger" @onclick="() => DeleteAccount(a)">Delete</button>
                         </td>

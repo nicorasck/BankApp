@@ -1,8 +1,6 @@
 @page "/Bank/CreateTransaction"
 
 @using System.ComponentModel.DataAnnotations
-@using System.Text
-@using System.Text.Encodings.Web
 @using Microsoft.AspNetCore.Identity
 @using Microsoft.AspNetCore.WebUtilities
 @using BankApp.Data
@@ -15,11 +13,12 @@
 @inject AuthenticationStateProvider AuthenticationStateProvider
 @layout BankLayout
 
+@rendermode InteractiveServer
 
 <PageTitle>New Transaction</PageTitle>
 
 <div class="container">
-<h3>Transfer Funds</h3>
+    <h3>Transfer Funds</h3>
     <EditForm Model="transaction" OnValidSubmit="CreateNewTransaction" method="post" FormName="CreateTransaction">
         <DataAnnotationsValidator />
         <ValidationSummary />
@@ -83,14 +82,14 @@
         var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
         var user = await UserManager.GetUserAsync(authState.User);
         if (user != null)
-        {   // Bringing the accounts IF user is not Null => callin method from Service
+        { // Bringing the accounts IF user is not Null => callin method from Service
             accounts = await DbContextService.GetAccountsByUserAsync(user);
         }
     }
     private async Task CreateNewTransaction()
     {
         if (!accounts.Any())
-        {   // to ensure the accounts are loaded
+        { // to ensure the accounts are loaded
             await LoadingAccounts();
             if (!accounts.Any())
             {
@@ -98,10 +97,32 @@
                 return; // If still no accounts, exit the method
             }
         }
-        
+        // Checking the current balance in "From Account"
+        var fromAccount = accounts.FirstOrDefault(a => a.Id == transaction.FromAccountId);
+        //var toAccount = accounts.FirstOrDefault(a => a.Id == transaction.ToAccountId);
+        if (fromAccount == null)
+        {
+            Console.WriteLine("From Account not found.");
+            return; // Exit if the "From Account" is not found
+        }
+
+        // Check if the balance is enough
+        if (fromAccount.Balance < transaction.OutgoingBalance)
+        {
+            Console.WriteLine("Not enough funds for the transaction.");
+            return; // Exit if the balance is not enough
+        }
+
         try
         {
             transaction.TransactionDate = DateTime.Now;
+            // Update the balances of the "From" and "To" accounts
+            fromAccount.Balance -= transaction.OutgoingBalance;
+            var toAccount = accounts.FirstOrDefault(a => a.Id == transaction.ToAccountId);
+            if (toAccount != null)
+            {
+                toAccount.Balance += transaction.OutgoingBalance;
+            }
             // Calling Service to make a transaction
             await DbContextService.CreateTransactionAsync(transaction);
             Console.WriteLine("Transaction created successfully.");
