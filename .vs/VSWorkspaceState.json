@@ -1,0 +1,12 @@
+{
+  "ExpandedNodes": [
+    "",
+    "\\Components",
+    "\\Components\\Account",
+    "\\Components\\Account\\Pages",
+    "\\Components\\Account\\Pages\\Manage",
+    "\\Components\\Account\\Shared"
+  ],
+  "SelectedNode": "\\Components\\Account\\Pages\\Manage\\Index.razor",
+  "PreviewInSolutionExplorer": false
+}

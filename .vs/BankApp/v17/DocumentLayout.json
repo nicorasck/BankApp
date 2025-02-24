@@ -1,0 +1,169 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\Users\\nicho\\development\\projects\\OPF\\Blazor\\BankApp\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{1682736E-6642-893F-1D42-FEACC01CB409}|BankApp.csproj|c:\\users\\nicho\\development\\projects\\opf\\blazor\\bankapp\\components\\account\\pages\\manage\\index.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{1682736E-6642-893F-1D42-FEACC01CB409}|BankApp.csproj|solutionrelative:components\\account\\pages\\manage\\index.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1682736E-6642-893F-1D42-FEACC01CB409}|BankApp.csproj|c:\\users\\nicho\\development\\projects\\opf\\blazor\\bankapp\\components\\pages\\home.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{1682736E-6642-893F-1D42-FEACC01CB409}|BankApp.csproj|solutionrelative:components\\pages\\home.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1682736E-6642-893F-1D42-FEACC01CB409}|BankApp.csproj|c:\\users\\nicho\\development\\projects\\opf\\blazor\\bankapp\\components\\account\\pages\\manage\\bankindex.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{1682736E-6642-893F-1D42-FEACC01CB409}|BankApp.csproj|solutionrelative:components\\account\\pages\\manage\\bankindex.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1682736E-6642-893F-1D42-FEACC01CB409}|BankApp.csproj|c:\\users\\nicho\\development\\projects\\opf\\blazor\\bankapp\\components\\account\\shared\\managenavemenubank.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{1682736E-6642-893F-1D42-FEACC01CB409}|BankApp.csproj|solutionrelative:components\\account\\shared\\managenavemenubank.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1682736E-6642-893F-1D42-FEACC01CB409}|BankApp.csproj|c:\\users\\nicho\\development\\projects\\opf\\blazor\\bankapp\\components\\account\\pages\\manage\\lockaccount.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{1682736E-6642-893F-1D42-FEACC01CB409}|BankApp.csproj|solutionrelative:components\\account\\pages\\manage\\lockaccount.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1682736E-6642-893F-1D42-FEACC01CB409}|BankApp.csproj|c:\\users\\nicho\\development\\projects\\opf\\blazor\\bankapp\\components\\account\\shared\\banklayout.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{1682736E-6642-893F-1D42-FEACC01CB409}|BankApp.csproj|solutionrelative:components\\account\\shared\\banklayout.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1682736E-6642-893F-1D42-FEACC01CB409}|BankApp.csproj|c:\\users\\nicho\\development\\projects\\opf\\blazor\\bankapp\\components\\account\\pages\\manage\\createaccount.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{1682736E-6642-893F-1D42-FEACC01CB409}|BankApp.csproj|solutionrelative:components\\account\\pages\\manage\\createaccount.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1682736E-6642-893F-1D42-FEACC01CB409}|BankApp.csproj|c:\\users\\nicho\\development\\projects\\opf\\blazor\\bankapp\\components\\account\\pages\\manage\\deleteaccount.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{1682736E-6642-893F-1D42-FEACC01CB409}|BankApp.csproj|solutionrelative:components\\account\\pages\\manage\\deleteaccount.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1682736E-6642-893F-1D42-FEACC01CB409}|BankApp.csproj|c:\\users\\nicho\\development\\projects\\opf\\blazor\\bankapp\\components\\account\\pages\\manage\\editaccount.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{1682736E-6642-893F-1D42-FEACC01CB409}|BankApp.csproj|solutionrelative:components\\account\\pages\\manage\\editaccount.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 1,
+          "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{3ae79031-e1bc-11d0-8f78-00a0c9110057}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "Index.razor",
+              "DocumentMoniker": "C:\\Users\\nicho\\development\\projects\\OPF\\Blazor\\BankApp\\Components\\Account\\Pages\\Manage\\Index.razor",
+              "RelativeDocumentMoniker": "Components\\Account\\Pages\\Manage\\Index.razor",
+              "ToolTip": "C:\\Users\\nicho\\development\\projects\\OPF\\Blazor\\BankApp\\Components\\Account\\Pages\\Manage\\Index.razor",
+              "RelativeToolTip": "Components\\Account\\Pages\\Manage\\Index.razor",
+              "ViewState": "AgIAAIUAAAAAAAAAAAAAwJwAAAA/AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-02-17T14:58:33.148Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "Home.razor",
+              "DocumentMoniker": "C:\\Users\\nicho\\development\\projects\\OPF\\Blazor\\BankApp\\Components\\Pages\\Home.razor",
+              "RelativeDocumentMoniker": "Components\\Pages\\Home.razor",
+              "ToolTip": "C:\\Users\\nicho\\development\\projects\\OPF\\Blazor\\BankApp\\Components\\Pages\\Home.razor",
+              "RelativeToolTip": "Components\\Pages\\Home.razor",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABYAAAAKAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-02-17T10:55:14.217Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "BankIndex.razor",
+              "DocumentMoniker": "C:\\Users\\nicho\\development\\projects\\OPF\\Blazor\\BankApp\\Components\\Account\\Pages\\Manage\\BankIndex.razor",
+              "RelativeDocumentMoniker": "Components\\Account\\Pages\\Manage\\BankIndex.razor",
+              "ToolTip": "C:\\Users\\nicho\\development\\projects\\OPF\\Blazor\\BankApp\\Components\\Account\\Pages\\Manage\\BankIndex.razor",
+              "RelativeToolTip": "Components\\Account\\Pages\\Manage\\BankIndex.razor",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-02-17T11:54:53.171Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "ManageNaveMenuBank.razor",
+              "DocumentMoniker": "C:\\Users\\nicho\\development\\projects\\OPF\\Blazor\\BankApp\\Components\\Account\\Shared\\ManageNaveMenuBank.razor",
+              "RelativeDocumentMoniker": "Components\\Account\\Shared\\ManageNaveMenuBank.razor",
+              "ToolTip": "C:\\Users\\nicho\\development\\projects\\OPF\\Blazor\\BankApp\\Components\\Account\\Shared\\ManageNaveMenuBank.razor",
+              "RelativeToolTip": "Components\\Account\\Shared\\ManageNaveMenuBank.razor",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABIAAAAFAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-02-17T11:54:12.806Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "LockAccount.razor",
+              "DocumentMoniker": "C:\\Users\\nicho\\development\\projects\\OPF\\Blazor\\BankApp\\Components\\Account\\Pages\\Manage\\LockAccount.razor",
+              "RelativeDocumentMoniker": "Components\\Account\\Pages\\Manage\\LockAccount.razor",
+              "ToolTip": "C:\\Users\\nicho\\development\\projects\\OPF\\Blazor\\BankApp\\Components\\Account\\Pages\\Manage\\LockAccount.razor",
+              "RelativeToolTip": "Components\\Account\\Pages\\Manage\\LockAccount.razor",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-02-17T11:56:22.236Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "BankLayout.razor",
+              "DocumentMoniker": "C:\\Users\\nicho\\development\\projects\\OPF\\Blazor\\BankApp\\Components\\Account\\Shared\\BankLayout.razor",
+              "RelativeDocumentMoniker": "Components\\Account\\Shared\\BankLayout.razor",
+              "ToolTip": "C:\\Users\\nicho\\development\\projects\\OPF\\Blazor\\BankApp\\Components\\Account\\Shared\\BankLayout.razor",
+              "RelativeToolTip": "Components\\Account\\Shared\\BankLayout.razor",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAsAAAAeAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-02-17T11:50:29.215Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "CreateAccount.razor",
+              "DocumentMoniker": "C:\\Users\\nicho\\development\\projects\\OPF\\Blazor\\BankApp\\Components\\Account\\Pages\\Manage\\CreateAccount.razor",
+              "RelativeDocumentMoniker": "Components\\Account\\Pages\\Manage\\CreateAccount.razor",
+              "ToolTip": "C:\\Users\\nicho\\development\\projects\\OPF\\Blazor\\BankApp\\Components\\Account\\Pages\\Manage\\CreateAccount.razor",
+              "RelativeToolTip": "Components\\Account\\Pages\\Manage\\CreateAccount.razor",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAcAAAAlAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-02-17T11:55:56.542Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "DeleteAccount.razor",
+              "DocumentMoniker": "C:\\Users\\nicho\\development\\projects\\OPF\\Blazor\\BankApp\\Components\\Account\\Pages\\Manage\\DeleteAccount.razor",
+              "RelativeDocumentMoniker": "Components\\Account\\Pages\\Manage\\DeleteAccount.razor",
+              "ToolTip": "C:\\Users\\nicho\\development\\projects\\OPF\\Blazor\\BankApp\\Components\\Account\\Pages\\Manage\\DeleteAccount.razor",
+              "RelativeToolTip": "Components\\Account\\Pages\\Manage\\DeleteAccount.razor",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-02-17T11:56:04.013Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
+              "Title": "EditAccount.razor",
+              "DocumentMoniker": "C:\\Users\\nicho\\development\\projects\\OPF\\Blazor\\BankApp\\Components\\Account\\Pages\\Manage\\EditAccount.razor",
+              "RelativeDocumentMoniker": "Components\\Account\\Pages\\Manage\\EditAccount.razor",
+              "ToolTip": "C:\\Users\\nicho\\development\\projects\\OPF\\Blazor\\BankApp\\Components\\Account\\Pages\\Manage\\EditAccount.razor",
+              "RelativeToolTip": "Components\\Account\\Pages\\Manage\\EditAccount.razor",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-02-17T11:56:16.013Z"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
